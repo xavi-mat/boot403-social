@@ -116,7 +116,7 @@ const UserController = {
     },
     async getData(req, res) {
         try {
-            return res.send({ msg: "Data sent", user:req.user });
+            return res.send({ msg: "User data", user: req.user });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error getting data' });
@@ -127,18 +127,40 @@ const UserController = {
 
             const result = await User.updateOne(
                 { _id: req.user._id },
-                { $pull: {tokens: req.headers.authorization}}
+                { $pull: { tokens: req.headers.authorization } }
             );
 
             if (result) {
-                return res.send({ msg: "Logout successful", result});
+                return res.send({ msg: "Logout successful" });
             } else {
-                return res.send({msg: "Unable to logout", result});
+                return res.send({ msg: "Unable to logout" });
             }
 
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Logout error' });
+        }
+    },
+    async update(req, res) {
+        try {
+            // Can only update some fields
+            const updatedUser = {
+                username: req.body.username,
+                avatar: req.body.avatar,
+            };
+
+            const user = await User.findByIdAndUpdate(
+                req.user._id,
+                updatedUser,
+                { new: true }
+            );
+            user.passhash = undefined;  // Don't send this info
+
+            return res.send({msg: "Updated", user});
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Update error' });
         }
     }
 }
