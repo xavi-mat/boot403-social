@@ -53,7 +53,7 @@ const PostController = {
             // Pagination
             let page = req.params.page;
             if (isNaN(page) || page < 1) {
-                return res.send({ msg: "Page must be a number greater than 0" });
+                page = 1;
             }
             const total = await Post.count();
             const maxPages = Math.ceil(total / PER_PAGE);
