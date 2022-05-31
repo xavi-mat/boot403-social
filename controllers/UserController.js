@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/config.json")["development"];
 const transporter = require("../config/nodemailer");
-const confirmEmail = require("../templates/confirm_email");
+const confirmEmailHTML = require("../templates/confirmEmailHTML");
+const fs = require("fs");
 
 // const path = require("path");
 
@@ -27,22 +28,58 @@ const UserController = {
                 { email: req.body.email }, jwt_secret, { expiresIn: "48h", });
             const url = "http://localhost:8080/users/confirm/" + emailToken;
 
-            // 🚨🚨🚨 Check if port 465 is closed🚨🚨🚨
-            await transporter.sendMail({
-                to: req.body.email,
-                subject: "Confirme su registro",
-                html: confirmEmail,
-            });
+            const confirmEmailContent = confirmEmailHTML(
+                req.body.username,
+                req.body.email,
+                emailToken,
+                'http://localhost:8080'
+            );
 
-            res.status(201).send({
+            // 🚨🚨🚨 Check if port 465 is closed🚨🚨🚨
+            // await transporter.sendMail({
+            //     to: req.body.email,
+            //     subject: "Confirme su registro",
+            //     html: confirmEmailContent,
+            // });
+
+            // Fake email: Create html web with link
+            await fs.writeFileSync('fakeEmail.html', confirmEmailContent);
+
+            return res.status(201).send({
                 msg: "We have sent a mail to confirm the registration",
                 user,
             });
 
         } catch (error) {
             console.error(error)
-            res.status(400).send({ msg: 'Error creating user' })
+            return res.status(400).send({ msg: 'Error creating user' })
         }
     },
+    async confirmEmail(req, res) {
+        try {
+            // Validate token
+            const token = req.params.emailToken;
+            const payload = jwt.verify(token, jwt_secret);
+
+            const result = await User.updateOne({ email: payload.email }, { confirmed: true });
+
+            console.warn(result);
+
+            return res.send({ msg: "Email confirmed" });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error verifying email' });
+        }
+    },
+    async cleanUsers(req, res) {
+        try {
+            const result = await User.deleteMany({});
+            return res.send({ msg: "Cleaned", result })
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error cleaning' });
+        }
+    }
 }
 module.exports = UserController;
