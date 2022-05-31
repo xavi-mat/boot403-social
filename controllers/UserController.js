@@ -71,14 +71,14 @@ const UserController = {
         try {
             const user = await User.findOne({ email: req.body.email });
             if (!user) {
-                return res.status(404).send({ message: "Wrong credentials" });
+                return res.status(404).send({ msg: "Wrong credentials" });
             }
             const passwordMatch = await bcrypt.compare(req.body.password, user.passhash);
             if (!passwordMatch) {
-                return res.status(404).send({ message: "Wrong credentials" });
+                return res.status(404).send({ msg: "Wrong credentials" });
             }
             if (!user.confirmed) {
-                return res.send({ message: "Please, confirm your email" });
+                return res.send({ msg: "Please, confirm your email" });
             }
             const token = jwt.sign({ _id: user._id }, jwt_secret);
             const result = await User.updateOne(
