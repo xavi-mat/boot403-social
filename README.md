@@ -2,7 +2,7 @@
 
 Exercise for [The Bridge](https://thebridge.tech).
 
-https://classroom.google.com/u/0/c/NDgwNDYwMTI2OTAz/a/MzYyOTU1MTUzMDM2/details
+https://classroom.google.com/u/0/c/NDgwNDYwMTI2OTAz/a/NTMxNTc5MDgwMjgw/details
 
 ### Author
 
