@@ -113,6 +113,24 @@ const UserController = {
             console.error(error);
             return res.status(400).send({ msg: 'Login error' });
         }
+    },
+    async getData(req, res) {
+        try {
+            return res.send({msg: "Data sent", user:req.user});
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error getting data' });
+        }
     }
+    // async logout(req, res) {
+    //     try {
+
+
+    //     } catch (error) {
+    //         console.error(error);
+    //         return res.status(400).send({ msg: 'Logout error' });
+    //     }
+    // }
 }
 module.exports = UserController;
