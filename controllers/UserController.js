@@ -94,8 +94,8 @@ const UserController = {
                 { $push: { tokens: token } },
                 { new: true, passhash: 0, tokens: 0 }
             );
-            // user.passhash = undefined;
-            // user.tokens = undefined;
+            userLoggedIn.passhash = undefined;
+            userLoggedIn.tokens = undefined;
             return res.send({ msg: `Welcome ${user.username}`, token, userLoggedIn });
         } catch (error) {
             console.error(error);
