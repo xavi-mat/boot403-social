@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
     confirmed: Boolean,
     active: Boolean,
     tokens: [String],
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    }],
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
