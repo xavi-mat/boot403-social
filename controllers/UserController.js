@@ -89,13 +89,14 @@ const UserController = {
                 return res.send({ msg: "Please, confirm your email" });
             }
             const token = jwt.sign({ _id: user._id }, jwt_secret);
-            const result = await User.updateOne(
-                { _id: user._id },
-                { $push: { tokens: [token] } }
+            const userLoggedIn = await User.findByIdAndUpdate(
+                user._id,
+                { $push: { tokens: token } },
+                { new: true, passhash: 0, tokens: 0 }
             );
-            user.passhash = undefined;
-            user.tokens = undefined;
-            return res.send({ msg: `Welcome ${user.username}`, token, user });
+            // user.passhash = undefined;
+            // user.tokens = undefined;
+            return res.send({ msg: `Welcome ${user.username}`, token, userLoggedIn });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Login error' });

@@ -97,8 +97,37 @@ const PostController = {
             console.error(error);
             return res.status(400).send({ msg: 'Error deleting post' });
         }
+    },
+    async like(req, res) {
+        try {
+            const post = await Post.findOneAndUpdate(
+                { _id: req.params._id, likes: { $nin: req.user._id } },
+                { $push: { likes: req.user._id } },
+                { new: true }
+            );
+            if (post) {
+                return res.send({ msg: "Post liked", post });
+            } else {
+                return res.status(400).send({ msg: 'Error liking post' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error liking post' });
+        }
+    },
+    async unlike(req, res) {
+        try {
+            const post = await Post.findByIdAndUpdate(
+                req.params._id,
+                { $pull: { likes: req.user._id } },
+                { new: true }
+            );
+            return res.send({ msg: "Post unliked", post });
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error liking post' });
+        }
     }
-
 };
 
 module.exports = PostController;

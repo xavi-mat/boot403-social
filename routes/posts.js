@@ -10,5 +10,7 @@ router.get('/title/:title', PostController.getByTitle);
 router.get('/page/:page', PostController.getAll);
 router.put('/id/:_id', authentication, PostController.update);
 router.delete('/id/:_id', authentication, PostController.delete);
+router.post('/like/id/:_id', authentication, PostController.like);
+router.delete('/like/id/:_id', authentication, PostController.unlike);
 
 module.exports = router;
