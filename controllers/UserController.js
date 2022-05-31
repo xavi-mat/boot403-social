@@ -20,7 +20,10 @@ const UserController = {
             req.body.active = true;
             const user = await User.create(req.body);
             const emailToken = jwt.sign(
-                { email: req.body.email }, jwt_secret, { expiresIn: "48h", });
+                { email: req.body.email },
+                jwt_secret,
+                { expiresIn: "48h", }
+            );
             const url = "http://localhost:8080/users/confirm/" + emailToken;
             const confirmEmailContent = confirmEmailHTML(
                 req.body.username,
@@ -50,7 +53,10 @@ const UserController = {
             // Validate token
             const token = req.params.emailToken;
             const payload = jwt.verify(token, jwt_secret);
-            const result = await User.updateOne({ email: payload.email }, { confirmed: true });
+            const result = await User.updateOne(
+                { email: payload.email },
+                { confirmed: true }
+            );
             console.warn(result);
             return res.send({ msg: "Email confirmed" });
         } catch (error) {
@@ -129,7 +135,7 @@ const UserController = {
                 { new: true }
             );
             user.passhash = undefined;  // Don't send this info
-            return res.send({msg: "Updated", user});
+            return res.send({ msg: "Updated", user });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Update error' });

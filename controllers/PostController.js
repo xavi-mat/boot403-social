@@ -14,6 +14,15 @@ const PostController = {
             console.error(error);
             return res.status(400).send({ msg: 'Error creating post' });
         }
+    },
+    async getById(req, res) {
+        try {
+            const post = await Post.findById(req.params._id).populate('author', {username:1,avatar:1});
+            return res.send(post);
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Error getting post' });
+        }
     }
 
 };
