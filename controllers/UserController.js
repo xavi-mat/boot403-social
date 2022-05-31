@@ -84,7 +84,7 @@ const UserController = {
     async login(req, res) {
         try {
 
-            const user = User.findOne({ email: req.body.email });
+            const user = await User.findOne({ email: req.body.email });
 
             if (!user) {
                 return res.status(404).send({ message: "Wrong credentials" });
