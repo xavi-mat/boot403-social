@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     passhash: String,
     avatar: String,
     role: String,
+    confirmed: Boolean,
     active: Boolean,
 }, { timestamps: true });
 
