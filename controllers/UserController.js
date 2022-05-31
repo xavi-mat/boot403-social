@@ -80,6 +80,39 @@ const UserController = {
             console.error(error);
             return res.status(400).send({ msg: 'Error cleaning' });
         }
+    },
+    async login(req, res) {
+        try {
+
+            const user = User.findOne({ email: req.body.email });
+
+            if (!user) {
+                return res.status(404).send({ message: "Wrong credentials" });
+            }
+
+            const passwordMatch = await bcrypt.compare(req.body.password, user.passhash);
+
+            if (!passwordMatch) {
+                return res.status(404).send({ message: "Wrong credentials" });
+            }
+
+            if (!user.confirmed) {
+                return res.send({ message: "Please, confirm your email" });
+            }
+
+            const token = jwt.sign({_id:user._id}, jwt_secret);
+
+            const result = await User.updateOne(
+                {_id: user._id},
+                { $push: { tokens: [token]}}
+            );
+
+            return res.send({msg: `Welcome ${user.username}`, token, user});
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Login error' });
+        }
     }
 }
 module.exports = UserController;

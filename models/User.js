@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema({
     role: String,
     confirmed: Boolean,
     active: Boolean,
+    tokens: [],
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
