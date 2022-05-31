@@ -35,7 +35,7 @@ const UserController = {
             //     html: confirmEmailContent,
             // });
             // Fake email: Create html web with link
-            await fs.writeFileSync('fakeEmail.html', confirmEmailContent);
+            fs.writeFileSync('fakeEmail.html', confirmEmailContent);
             return res.status(201).send({
                 msg: "We have sent a mail to confirm the registration",
                 user,
@@ -93,6 +93,7 @@ const UserController = {
     },
     async getData(req, res) {
         try {
+            const user = await User.findById(req.user._id).populate('posts');
             return res.send({ msg: "User data", user: req.user });
         } catch (error) {
             console.error(error);
