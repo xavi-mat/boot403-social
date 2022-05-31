@@ -11,6 +11,6 @@ router.get('/', authentication, UserController.getData);
 router.delete('/logout', authentication, UserController.logout);
 router.put('/', authentication, UserController.update);
 
-router.delete('/clean-all', UserController.cleanUsers);
+router.delete('/clean-all', UserController.cleanAll);
 
 module.exports = router;

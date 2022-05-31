@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const { User, Post, Comment } = require("../models/");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/config.json")["development"];
@@ -64,10 +64,12 @@ const UserController = {
             return res.status(400).send({ msg: 'Error verifying email' });
         }
     },
-    async cleanUsers(req, res) {
+    async cleanAll(req, res) {
         try {
-            const result = await User.deleteMany({});
-            return res.send({ msg: "Cleaned", result })
+            const users = await User.deleteMany({});
+            const posts = await Post.deleteMany({});
+            const comments = await Comment.deleteMany({});
+            return res.send({ msg: "Cleaned", users, posts, comments })
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error cleaning' });
@@ -91,6 +93,8 @@ const UserController = {
                 { _id: user._id },
                 { $push: { tokens: [token] } }
             );
+            user.passhash = undefined;
+            user.tokens = undefined;
             return res.send({ msg: `Welcome ${user.username}`, token, user });
         } catch (error) {
             console.error(error);
@@ -99,8 +103,11 @@ const UserController = {
     },
     async getData(req, res) {
         try {
-            const user = await User.findById(req.user._id).populate('posts');
-            return res.send({ msg: "User data", user: req.user });
+            const user = await User.findById(
+                req.user._id,
+                { tokens: 0, confirmed: 0, active: 0, passhash: 0 }
+            ).populate('posts', { author: 0 });
+            return res.send({ msg: "User data", user });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error getting data' });
@@ -135,6 +142,8 @@ const UserController = {
                 { new: true }
             );
             user.passhash = undefined;  // Don't send this info
+            user.tokens = undefined;
+            user.confirmed = undefined;
             return res.send({ msg: "Updated", user });
         } catch (error) {
             console.error(error);
