@@ -100,14 +100,14 @@ const UserController = {
                 return res.send({ message: "Please, confirm your email" });
             }
 
-            const token = jwt.sign({_id:user._id}, jwt_secret);
+            const token = jwt.sign({ _id: user._id }, jwt_secret);
 
             const result = await User.updateOne(
-                {_id: user._id},
-                { $push: { tokens: [token]}}
+                { _id: user._id },
+                { $push: { tokens: [token] } }
             );
 
-            return res.send({msg: `Welcome ${user.username}`, token, user});
+            return res.send({ msg: `Welcome ${user.username}`, token, user });
 
         } catch (error) {
             console.error(error);
@@ -116,21 +116,30 @@ const UserController = {
     },
     async getData(req, res) {
         try {
-            return res.send({msg: "Data sent", user:req.user});
-
+            return res.send({ msg: "Data sent", user:req.user });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error getting data' });
         }
+    },
+    async logout(req, res) {
+        try {
+
+            const result = await User.updateOne(
+                { _id: req.user._id },
+                { $pull: {tokens: req.headers.authorization}}
+            );
+
+            if (result) {
+                return res.send({ msg: "Logout successful", result});
+            } else {
+                return res.send({msg: "Unable to logout", result});
+            }
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send({ msg: 'Logout error' });
+        }
     }
-    // async logout(req, res) {
-    //     try {
-
-
-    //     } catch (error) {
-    //         console.error(error);
-    //         return res.status(400).send({ msg: 'Logout error' });
-    //     }
-    // }
 }
 module.exports = UserController;

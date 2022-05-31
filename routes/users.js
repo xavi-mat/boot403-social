@@ -8,6 +8,7 @@ router.post('/', UserController.register);
 router.get('/confirm/:emailToken', UserController.confirmEmail);
 router.post('/login', UserController.login);
 router.get('/', authentication, UserController.getData);
+router.delete('/logout', authentication, UserController.logout);
 
 router.delete('/clean-all', UserController.cleanUsers);
 
