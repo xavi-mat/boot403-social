@@ -20,6 +20,18 @@ const CommentController = {
             console.error(error);
             res.status(400).send({ msg: "Error creating comment" });
         }
+    },
+    async delete(req, res) {
+        try {
+            const comment = await Comment.findOneAndDelete(
+                { _id: req.params._id, author: req.user._id }
+            );
+            res.send({ msg: "Comment deleted", comment });
+        } catch (error) {
+            console.error(error);
+            res.status(400).send({ msg: "Error deleting comment" });
+        }
+
     }
 };
 
