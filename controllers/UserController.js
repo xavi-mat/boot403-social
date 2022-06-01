@@ -15,7 +15,7 @@ const UserController = {
             }
             req.body.role = "user"; // Assing role by default
             req.body.passhash = bcrypt.hashSync(req.body.password, 10);
-            req.body.avatar = '';
+            req.body.avatar = 'http://localhost:8080/avatars/avatar.png';
             req.body.confirmed = false;
             req.body.active = true;
             const user = await User.create(req.body);
@@ -105,9 +105,14 @@ const UserController = {
         try {
             const user = await User.findById(
                 req.user._id,
-                { tokens: 0, confirmed: 0, active: 0, passhash: 0 }
-            ).populate('posts', { author: 0 });
-            return res.send({ msg: "User data", user });
+                { tokens: 0, confirmed: 0, active: 0, passhash: 0 })
+                .populate('posts', { author: 0 })
+                .populate({ path: 'followers', select: { username: 1, avatar: 1 } });
+            return res.send({
+                msg: "User data",
+                user,
+                followersCount: user.followers.length
+            });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error getting data' });
@@ -148,6 +153,74 @@ const UserController = {
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Update error' });
+        }
+    },
+    async follow(req, res) {
+        try {
+            const user = await User.findOneAndUpdate(
+                { _id: req.params._id, followers: { $nin: req.user._id } },
+                { $push: { followers: req.user._id } }
+            );
+            if (user) {
+                await User.findByIdAndUpdate(
+                    req.user._id,
+                    { $push: { following: req.params._id } }
+                );
+                return res.send({ msg: "Following" })
+            } else {
+                return res.status(400).send({ msg: 'Error following user' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send({ msg: 'Error following user' });
+        }
+    },
+    async unfollow(req, res) {
+        try {
+            const user = await User.findOneAndUpdate(
+                { _id: req.params._id, followers: { $in: req.user._id } },
+                { $pull: { followers: req.user._id } }
+            );
+            if (user) {
+                await User.findByIdAndUpdate(
+                    req.user._id,
+                    { $pull: { following: req.params._id } }
+                );
+                return res.send({ msg: "Unfollowing" });
+            } else {
+                return res.status(400).send({ msg: 'Error unfollowing user' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send({ msg: 'Error unfollowing user' });
+        }
+    },
+    async searchByUsername(req, res) {
+        try {
+            if (req.params.username.length > 30) {
+                return res.send({ msg: "Search string too long" });
+            }
+            const username = new RegExp(req.params.username, 'i');
+            const users = await User.find(
+                { username, role: { $nin: 'admin' } },
+                { username: 1, avatar: 1, role: 1 }
+            );
+            return res.send(users);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send({ msg: 'Error searching users' });
+        }
+    },
+    async getById(req, res) {
+        try {
+            const user = await User.findById(
+                req.params._id,
+                { email: 0, passhash: 0, role: 0, confirmed: 0, tokens: 0 }
+            );
+            return res.send(user);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send({ msg: 'Error searching user' });
         }
     }
 }

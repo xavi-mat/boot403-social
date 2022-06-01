@@ -60,10 +60,11 @@ const PostController = {
             const maxPages = Math.ceil(total / PER_PAGE);
             page = Math.min(page, maxPages);
             const posts = await Post.find()
+                .sort('-updatedAt')
                 .limit(PER_PAGE)
                 .skip(PER_PAGE * (page - 1))
-                .populate('author', { username: 1, avatar: 1 })
-                .populate('comments');
+                .populate('author', { username: 1, avatar: 1, role: 1 })
+                .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1 } } });
             res.send({ msg: "All posts", total, page, maxPages, posts });
         } catch (error) {
             console.error(error);

@@ -1,3 +1,5 @@
 /node_modules
 /config/config.json
 /config/keys.js
+/public/avatars
+/public/imgs
