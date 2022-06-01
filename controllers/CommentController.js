@@ -3,11 +3,14 @@ const { Comment, Post, User } = require("../models/");
 const CommentController = {
     async create(req, res) {
         try {
+            const image = req.file ?
+                `http://localhost:8080/imgs/${req.file.filename}` :
+                undefined;
             const newComment = {
                 postId: req.body.postId,
                 text: req.body.text,
                 author: req.user._id,
-                image: req.body.image,
+                image,
             };
             const comment = await Comment.create(newComment);
             const post = await Post.findByIdAndUpdate(
@@ -44,9 +47,12 @@ const CommentController = {
     },
     async update(req, res) {
         try {
+            const image = req.file ?
+                `http://localhost:8080/imgs/${req.file.filename}` :
+                undefined;
             const updatedComment = {
                 text: req.body.text,
-                image: req.body.image,
+                image,
             };
             const comment = await Comment.findByIdAndUpdate(
                 req.params._id,

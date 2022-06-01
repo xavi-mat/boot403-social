@@ -50,15 +50,13 @@ const UserController = {
     },
     async confirmEmail(req, res) {
         try {
-            // Validate token
             const token = req.params.emailToken;
             const payload = jwt.verify(token, jwt_secret);
-            const result = await User.updateOne(
+            await User.updateOne(
                 { email: payload.email },
                 { confirmed: true }
             );
-            console.warn(result);
-            return res.send({ msg: "Email confirmed" });
+            return res.redirect('/');
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error verifying email' });
