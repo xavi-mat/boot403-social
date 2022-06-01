@@ -124,7 +124,7 @@ const UserController = {
             return res.send({ msg: "Logout successful" });
         } catch (error) {
             console.error(error);
-            return res.status(400).send({ msg: 'Logout error' });
+            return res.status(500).send({ msg: 'Logout error' });
         }
     },
     async update(req, res) {
