@@ -3,12 +3,19 @@ const express = require("express");
 const PostController = require("../controllers/PostController");
 const { authentication, isPostAuthor } = require("../middleware/authentication");
 const router = express.Router();
+const { uploadImg } = require("../middleware/multer");
 
-router.post('/', authentication, PostController.create);
+router.post('/', authentication, uploadImg.single('image'), PostController.create);
 router.get('/id/:_id', PostController.getById);
 router.get('/title/:title', PostController.getByTitle);
 router.get('/page/:page', PostController.getAll);
-router.put('/id/:_id', authentication, isPostAuthor, PostController.update);
+router.put(
+    '/id/:_id',
+    authentication,
+    isPostAuthor,
+    uploadImg.single('image'),
+    PostController.update
+);
 router.delete('/id/:_id', authentication, isPostAuthor, PostController.delete);
 router.post('/like/id/:_id', authentication, PostController.like);
 router.delete('/like/id/:_id', authentication, PostController.unlike);

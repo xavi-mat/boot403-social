@@ -4,11 +4,14 @@ const PER_PAGE = 10;
 const PostController = {
     async create(req, res) {
         try {
+            const image = req.file ?
+                `http://localhost:8080/imgs/${req.file.filename}` :
+                undefined;
             const newPost = {
                 title: req.body.title,
                 body: req.body.body,
                 author: req.user._id,
-                image: req.body.image,
+                image,
             };
             const post = await Post.create(newPost);
             await User.findByIdAndUpdate(
@@ -69,10 +72,13 @@ const PostController = {
     },
     async update(req, res) {
         try {
+            const image = req.file ?
+                `http://localhost:8080/imgs/${req.file.filename}` :
+                undefined;
             const updatedPost = {
                 title: req.body.title,
                 body: req.body.body,
-                image: req.body.image
+                image,
             };
             const post = await Post.findOneAndUpdate(
                 { _id: req.params._id, author: req.user._id },
