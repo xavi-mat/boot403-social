@@ -5,6 +5,7 @@ const { jwt_secret } = require("../config/config.json")["development"];
 const transporter = require("../config/nodemailer");
 const confirmEmailHTML = require("../templates/confirmEmailHTML");
 const fs = require("fs");  // Used for the fakeEmail
+const { faker } = require("@faker-js/faker");
 
 const UserController = {
     async register(req, res) {
@@ -64,9 +65,49 @@ const UserController = {
     },
     async cleanAll(req, res) {
         try {
+            // Empty all
             const users = await User.deleteMany({});
             const posts = await Post.deleteMany({});
             const comments = await Comment.deleteMany({});
+            // Put 10 users
+            const usersId = [];
+            for (let i = 0; i < 10; i++) {
+                const user = {
+                    username: faker.name.findName(),
+                    email: `fake${i}@email.com`,
+                    passhash: bcrypt.hashSync('123456', 10),
+                    avatar: faker.internet.avatar(),
+                    role: "user",
+                    confirmed: true,
+                    active: true,
+                };
+                const newUser = await User.create(user);
+                usersId.push(newUser._id);
+            }
+            // Write 30 posts
+            usersId.forEach(async (userId) => {
+                for (let i = 0; i < 3; i++) {
+                    const post = {
+                        title: faker.lorem.sentence(),
+                        body: faker.lorem.paragraph(),
+                        author: userId,
+                        image: faker.image.cats(300, 300, true),
+                    };
+                    const newPost = await Post.create(post);
+                    await User.findByIdAndUpdate(userId, { $push: { posts: newPost._id } });
+                    for (let i = 0; i < 2; i++) {
+                        const comment = {
+                            postId: newPost._id,
+                            text: faker.lorem.paragraph(),
+                            author: usersId[Math.floor(Math.random() * usersId.length)],
+                            image: faker.image.cats(),
+                        };
+                        const newComment = await Comment.create(comment);
+                        await Post.findByIdAndUpdate(newPost._id, { $push: { comments: newComment._id } });
+                        await User.findByIdAndUpdate(comment.author, { $push: { comments: newComment._id } });
+                    }
+                }
+            });
             return res.send({ msg: "Cleaned", users, posts, comments })
         } catch (error) {
             console.error(error);
