@@ -4,14 +4,14 @@ const CommentController = {
     async create(req, res) {
         try {
             const newComment = {
-                post_id: req.body.post_id,
+                postId: req.body.postId,
                 text: req.body.text,
                 author: req.user._id,
                 image: req.body.image,
             };
             const comment = await Comment.create(newComment);
             const post = await Post.findByIdAndUpdate(
-                req.body.post_id,
+                req.body.postId,
                 { $push: { comments: comment._id } },
                 { new: true }
             );

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const CommentSchema = new mongoose.Schema({
-    post_id: {
-        type: mongoose.Schema.Types.ObjectId,
+    postId: {
+        type: ObjectId,
         ref: "Post",
         required: true,
     },
@@ -11,13 +12,13 @@ const CommentSchema = new mongoose.Schema({
         required: true,
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref: "User",
         required: true,
     },
     image: String,
     likes: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref: "User",
     }],
 }, { timestamps: true });

@@ -89,14 +89,15 @@ const UserController = {
                 return res.send({ msg: "Please, confirm your email" });
             }
             const token = jwt.sign({ _id: user._id }, jwt_secret);
-            const userLoggedIn = await User.findByIdAndUpdate(
-                user._id,
-                { $push: { tokens: token } },
-                { new: true, passhash: 0, tokens: 0 }
-            );
-            userLoggedIn.passhash = undefined;
-            userLoggedIn.tokens = undefined;
-            return res.send({ msg: `Welcome ${user.username}`, token, userLoggedIn });
+            while (user.tokens.length > 4) {
+                user.tokens.shift();
+            }
+            user.tokens.push(token);
+            await user.save();
+            user.passhash = undefined;
+            user.tokens = undefined;
+            user.confirmed = undefined;
+            return res.send({ msg: `Welcome ${user.username}`, token, user });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Login error' });
@@ -116,15 +117,11 @@ const UserController = {
     },
     async logout(req, res) {
         try {
-            const result = await User.updateOne(
-                { _id: req.user._id },
+            await User.findByIdAndUpdate(
+                req.user._id,
                 { $pull: { tokens: req.headers.authorization } }
             );
-            if (result) {
-                return res.send({ msg: "Logout successful" });
-            } else {
-                return res.send({ msg: "Unable to logout" });
-            }
+            return res.send({ msg: "Logout successful" });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Logout error' });

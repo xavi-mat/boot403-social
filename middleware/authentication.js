@@ -15,7 +15,9 @@ const authentication = async (req, res, next) => {
         if (!user) {
             return res.status(401).send({ msg: "Unauthorized" });
         }
+        console.log('ANTES: req.user es:',req.user);
         req.user = user;
+        console.log('DESPUÉS: req.user es:',req.user);
         next();
     } catch (error) {
         console.log(error);
