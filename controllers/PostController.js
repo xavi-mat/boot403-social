@@ -114,7 +114,7 @@ const PostController = {
                 );
                 return res.send({ msg: "Post liked", post });
             } else {
-                return res.status(400).send({ msg: 'Error liking post' });
+                return res.status(400).send({ msg: 'Error liking unexistent post' });
             }
         } catch (error) {
             console.error(error);
@@ -134,7 +134,7 @@ const PostController = {
                 );
                 return res.send({ msg: "Post unliked" });
             } else {
-                return res.send({ msg: "Error unliking post" });
+                return res.send({ msg: "Error unliking inexistent post" });
             }
         } catch (error) {
             console.error(error);

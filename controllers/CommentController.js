@@ -62,7 +62,8 @@ const CommentController = {
     async getById(req, res) {
         try {
             const comment = await Comment.findById(req.params._id)
-                .populate({ path: 'author', select: { username: 1, avatar: 1 } });
+                .populate({ path: 'author', select: { username: 1, avatar: 1 } })
+                .populate({ path: 'likes', select: { username: 1, avatar: 1 } });
             return res.send({ msg: "Comment", comment });
         } catch (error) {
             console.error(error);
@@ -83,7 +84,7 @@ const CommentController = {
                 );
                 return res.send({ msg: "Comment liked", comment });
             } else {
-                res.status(400).send({ msg: "Error liking comment" });
+                res.status(400).send({ msg: "Error liking unexistent comment" });
             }
         } catch (error) {
             console.error(error);
@@ -103,7 +104,7 @@ const CommentController = {
                 );
                 return res.send({ msg: "Comment unliked" });
             } else {
-                res.status(400).send({ msg: "Error unliking comment" });
+                res.status(400).send({ msg: "Error unliking unexistent comment" });
             }
         } catch (error) {
             console.error(error);
