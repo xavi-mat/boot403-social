@@ -3,8 +3,19 @@ const express = require("express");
 const UserController = require("../controllers/UserController");
 const { authentication } = require("../middleware/authentication");
 const router = express.Router();
-const multer = require("multer");
-const upload = multer({dest: '../public/avatars/'});
+
+// Multer funcionality from https://stackoverflow.com/a/39650303
+var multer = require('multer');
+var path = require('path');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/avatars/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+    }
+});
+var upload = multer({ storage: storage });
 
 router.post('/', UserController.register);
 router.get('/confirm/:emailToken', UserController.confirmEmail);

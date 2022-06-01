@@ -130,9 +130,13 @@ const UserController = {
     async update(req, res) {
         try {
             // Can only update some fields
+            const avatar = req.file ?
+                `http://localhost:8080/avatars/${req.file.filename}` :
+                undefined;
+
             const updatedUser = {
                 username: req.body.username,
-                avatar: req.body.avatar,
+                avatar,
             };
             const user = await User.findByIdAndUpdate(
                 req.user._id,
