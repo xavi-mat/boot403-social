@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const UserSchema = new mongoose.Schema({
     username: String,
@@ -12,14 +13,26 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         default: 'user',
-        enum: ['user', 'admin', 'moderator']
+        enum: ['admin', 'mod', 'vip', 'user'],
     },
     confirmed: Boolean,
     active: Boolean,
     tokens: [String],
     posts: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: ObjectId,
         ref: "Post"
+    }],
+    comments: [{
+        type: ObjectId,
+        ref: "Comment"
+    }],
+    likedPosts: [{
+        type: ObjectId,
+        ref: "Post"
+    }],
+    likedComments: [{
+        type: ObjectId,
+        ref: "Comments"
     }],
 }, { timestamps: true });
 

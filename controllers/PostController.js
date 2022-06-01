@@ -8,18 +8,14 @@ const PostController = {
                 title: req.body.title,
                 body: req.body.body,
                 author: req.user._id,
-                image: req.body.image
+                image: req.body.image,
             };
             const post = await Post.create(newPost);
-            const result = await User.findByIdAndUpdate(
+            await User.findByIdAndUpdate(
                 req.user._id,
                 { $push: { posts: post._id } }
             );
-            if (result) {
-                return res.status(201).send({ msg: "Post created", post });
-            } else {
-                return res.send({ msg: "Error creating post" })
-            }
+            return res.status(201).send({ msg: "Post created", post });
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error creating post', error });
@@ -78,13 +74,11 @@ const PostController = {
                 body: req.body.body,
                 image: req.body.image
             };
-
-            const post = await Post.findByIdAndUpdate(
-                req.params._id,
+            const post = await Post.findOneAndUpdate(
+                { _id: req.params._id, author: req.user._id },
                 updatedPost,
                 { new: true }
             );
-
             return res.send({ msg: "Post updated", post });
         } catch (error) {
             console.error(error);
@@ -95,6 +89,10 @@ const PostController = {
         try {
             const post = await Post.findOneAndDelete(
                 { _id: req.params._id, author: req.user._id }
+            );
+            await User.findByIdAndUpdate(
+                req.user_id,
+                { $pull: { comments: req.params._id } }
             );
             res.send({ msg: "Post deleted", post });
         } catch (error) {
@@ -110,23 +108,34 @@ const PostController = {
                 { new: true }
             );
             if (post) {
+                await User.findByIdAndUpdate(
+                    req.user._id,
+                    { $push: { likedPosts: post._id } }
+                );
                 return res.send({ msg: "Post liked", post });
             } else {
                 return res.status(400).send({ msg: 'Error liking post' });
             }
         } catch (error) {
             console.error(error);
-            return res.status(400).send({ msg: 'Error liking post' });
+            return res.status(500).send({ msg: 'Error liking post' });
         }
     },
     async unlike(req, res) {
         try {
-            await Post.findByIdAndUpdate(
+            const post = await Post.findByIdAndUpdate(
                 req.params._id,
-                { $pull: { likes: req.user._id } },
-                { new: true }
+                { $pull: { likes: req.user._id } }
             );
-            return res.send({ msg: "Post unliked" });
+            if (post) {
+                await User.findByIdAndUpdate(
+                    req.user._id,
+                    { $pull: { likedPosts: post._id } }
+                );
+                return res.send({ msg: "Post unliked" });
+            } else {
+                return res.send({ msg: "Error unliking post" });
+            }
         } catch (error) {
             console.error(error);
             return res.status(400).send({ msg: 'Error unliking post' });
