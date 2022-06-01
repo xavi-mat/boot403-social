@@ -27,7 +27,9 @@ const PostController = {
     },
     async getById(req, res) {
         try {
-            const post = await Post.findById(req.params._id).populate('author', { username: 1, avatar: 1 });
+            const post = await Post.findById(req.params._id)
+                .populate('author', { username: 1, avatar: 1 })
+                .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1 } } });
             return res.send(post);
         } catch (error) {
             console.error(error);
@@ -76,11 +78,13 @@ const PostController = {
                 body: req.body.body,
                 image: req.body.image
             };
-            const post = await Post.findOneAndUpdate(
-                { _id: req.params._id, author: req.user._id },
+
+            const post = await Post.findByIdAndUpdate(
+                req.params._id,
                 updatedPost,
                 { new: true }
             );
+
             return res.send({ msg: "Post updated", post });
         } catch (error) {
             console.error(error);
@@ -117,15 +121,15 @@ const PostController = {
     },
     async unlike(req, res) {
         try {
-            const post = await Post.findByIdAndUpdate(
+            await Post.findByIdAndUpdate(
                 req.params._id,
                 { $pull: { likes: req.user._id } },
                 { new: true }
             );
-            return res.send({ msg: "Post unliked", post });
+            return res.send({ msg: "Post unliked" });
         } catch (error) {
             console.error(error);
-            return res.status(400).send({ msg: 'Error liking post' });
+            return res.status(400).send({ msg: 'Error unliking post' });
         }
     }
 };

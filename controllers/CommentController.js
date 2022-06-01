@@ -29,9 +29,25 @@ const CommentController = {
             res.send({ msg: "Comment deleted", comment });
         } catch (error) {
             console.error(error);
-            res.status(400).send({ msg: "Error deleting comment" });
+            res.status(500).send({ msg: "Error deleting comment" });
         }
-
+    },
+    async update(req, res) {
+        try {
+            const updatedComment = {
+                text: req.body.text,
+                image: req.body.image,
+            };
+            const comment = await Comment.findByIdAndUpdate(
+                req.params._id,
+                updatedComment,
+                { new: true}
+            );
+            res.send({msg: "Comment updated", comment});
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ msg: "Error updating comment" });
+        }
     }
 };
 

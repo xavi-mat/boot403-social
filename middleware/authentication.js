@@ -1,5 +1,5 @@
 'use strict';
-const User = require("../models/User");
+const { User, Post, Comment } = require("../models/");
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require("../config/config.json")["development"];
 
@@ -15,14 +15,42 @@ const authentication = async (req, res, next) => {
         if (!user) {
             return res.status(401).send({ msg: "Unauthorized" });
         }
-        console.log('ANTES: req.user es:',req.user);
         req.user = user;
-        console.log('DESPUÉS: req.user es:',req.user);
         next();
     } catch (error) {
         console.log(error);
-        return res.status(500).send({ msg: "Token error", error });
+        return res.status(500).send({ msg: "Token error" });
     }
 }
 
-module.exports = { authentication };
+const isPostAuthor = async (req, res, next) => {
+    try {
+        const post = await Post.findOne(
+            { _id: req.params._id, author: req.user._id }
+        );
+        if (!post) {
+            return res.status(403).send({ msg: "Forbidden" });
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ msg: "Error" })
+    }
+}
+
+const isCommentAuthor = async (req, res, next) => {
+    try {
+        const comment = await Comment.findOne(
+            { _id: req.params._id, author: req.user._id }
+        );
+        if (!comment) {
+            return res.status(403).send({ msg: "Forbidden" });
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ msg: "Error" })
+    }
+}
+
+module.exports = { authentication, isPostAuthor, isCommentAuthor };

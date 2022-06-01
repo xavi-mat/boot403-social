@@ -1,10 +1,12 @@
 'use strict';
 const express = require("express");
 const CommentController = require("../controllers/CommentController");
-const { authentication } = require("../middleware/authentication");
+const { authentication, isCommentAuthor } = require("../middleware/authentication");
 const router = express.Router();
 
 router.post('/', authentication, CommentController.create);
-router.delete('/id/:_id', authentication, CommentController.delete);
+router.delete('/id/:_id', authentication, isCommentAuthor, CommentController.delete);
+router.put('/id/:_id', authentication, isCommentAuthor, CommentController.update);
+
 
 module.exports = router;

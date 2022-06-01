@@ -1,15 +1,15 @@
 'use strict';
 const express = require("express");
 const PostController = require("../controllers/PostController");
-const { authentication } = require("../middleware/authentication");
+const { authentication, isPostAuthor } = require("../middleware/authentication");
 const router = express.Router();
 
 router.post('/', authentication, PostController.create);
 router.get('/id/:_id', PostController.getById);
 router.get('/title/:title', PostController.getByTitle);
 router.get('/page/:page', PostController.getAll);
-router.put('/id/:_id', authentication, PostController.update);
-router.delete('/id/:_id', authentication, PostController.delete);
+router.put('/id/:_id', authentication, isPostAuthor, PostController.update);
+router.delete('/id/:_id', authentication, isPostAuthor, PostController.delete);
 router.post('/like/id/:_id', authentication, PostController.like);
 router.delete('/like/id/:_id', authentication, PostController.unlike);
 
