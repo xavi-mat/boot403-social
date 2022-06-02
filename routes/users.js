@@ -15,6 +15,7 @@ router.put('/', authentication, uploadAvatar.single('avatar'), UserController.up
 router.put('/follow/:_id', authentication, UserController.follow);
 router.delete('/logout', authentication, UserController.logout);
 router.delete('/follow/:_id', authentication, UserController.unfollow);
+
 router.delete('/clean-all', authentication, isAdmin, UserController.cleanAll);
 
 module.exports = router;

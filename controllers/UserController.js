@@ -79,7 +79,7 @@ const UserController = {
                     email: `fake${i}@email.com`,
                     passhash: bcrypt.hashSync('123456', 10),
                     avatar: faker.internet.avatar(),
-                    role: "user",
+                    role: i === 0 ? "admin" : "user",
                     confirmed: true,
                     active: true,
                 };
@@ -119,7 +119,11 @@ const UserController = {
     },
     async login(req, res, next) {
         try {
-            const user = await User.findOne({ email: req.body.email });
+            const user = await User.findOne({ email: req.body.email })
+                .populate({ path: "posts", select: { title: 1 } })
+                .populate({ path: "likedPosts", select: { title: 1 } })
+                .populate({ path: "following", select: { username: 1 } })
+                .populate({ path: "followers", select: { username: 1 } })
             if (!user) {
                 return res.status(404).send({ msg: "Wrong credentials" });
             }
@@ -272,7 +276,7 @@ const UserController = {
                 { username: 1, avatar: 1, role: 1 })
                 .limit(limit)
                 .skip(limit * (page - 1));
-            return res.send({msg:"Users found", total, page, maxPages, users});
+            return res.send({ msg: "Users found", total, page, maxPages, users });
         } catch (error) {
             error.origin = 'user';
             error.suborigin = 'searchByUsername';
@@ -283,9 +287,12 @@ const UserController = {
         try {
             const user = await User.findById(
                 req.params._id,
-                { email: 0, passhash: 0, role: 0, confirmed: 0, tokens: 0 }
-            );
-            return res.send(user);
+                { email: 0, passhash: 0, role: 0, confirmed: 0, tokens: 0 })
+                .populate({ path: 'posts', select: { title: 1 } })
+                .populate({ path: 'likedPosts', select: { title: 1 } })
+                .populate({ path: 'following', select: { username: 1 } })
+                .populate({ path: 'followers', select: { username: 1 } })
+            return res.send({ msg: "User data", user });
         } catch (error) {
             error.origin = 'user';
             error.suborigin = 'getById';
