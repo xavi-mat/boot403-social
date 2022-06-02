@@ -4,11 +4,11 @@ Exercise for [The Bridge](https://thebridge.tech).
 
 https://classroom.google.com/u/0/c/NDgwNDYwMTI2OTAz/a/NTMxNTc5MDgwMjgw/details
 
-> Build an API for a social network with users, posts and comments.
-> Users can create/update/delete posts
-> Users can comment posts
-> Users can like/unlike posts and comments
-> Users can follow/unfollow other users
+> * Build an API for a social network with users, posts and comments.
+> * Users can create/update/delete posts
+> * Users can comment posts
+> * Users can like/unlike posts and comments
+> * Users can follow/unfollow other users
 
 ### Author
 
@@ -35,29 +35,29 @@ https://github.com/xavi-mat/boot403-social
 ### Usage
 There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 
-|method|endpoint|role|use|
-|------|--------|----|---|
-|POST|`/users`|anyone|Get all users|
-|POST|`/users/login`|anyone|Login with credentials|
-|GET|`/users`|user|Get own user's data|
-|GET|`/users/confirm/:emailToken`|anyone|Confirm email|
-|GET|`/users/search`|anyone|Search by username|
-|GET|`/users/id/:_id`|user|Get user data by Id|
-|PUT|`/users`|user|Update own information|
-|PUT|`/users/follow/:_id`|user|Follow user by Id|
-|DELETE|`/users/logout`|user|Logout|
-|DELETE|`/users/follow/:_id`|user|Stop following user by Id|
-|POST|`/posts`|user|Create a post|
-|GET|`/posts/id/:_id`|anyone|Get a post by Id|
-|GET|`/posts/search`|anyone|Search a post by title|
-|GET|`/posts`|anyone|Get all posts|
-|PUT|`/posts/like/id/:_id`|user|Like a post by Id|
-|PUT|`/posts/id/:_id`|author|Update own posts by Id|
-|DELETE|`/posts/id/:_id`|author|Delete own post by Id|
-|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|
-|POST|`/comments`|user|Create a comment to a post|
-|GET|`/comments/id/:_id`|anyone|Get a comment by Id|
-|PUT|`/comments/id/:_id`|author|Update own comment by Id|
-|PUT|`/comments/like/:_id`|user|Like a comment by Id|
-|DELETE|`/comments/id/:_id`|author|Delete own comment by Id|
-|DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|
+|method|endpoint|role|use|[ ]|
+|------|--------|----|---|[ ]|
+|POST|`/users`|anyone|Get all users|[ ]|
+|POST|`/users/login`|anyone|Login with credentials|[ ]|
+|GET|`/users`|user|Get own user's data|[ ]|
+|GET|`/users/confirm/:emailToken`|anyone|Confirm email|[ ]|
+|GET|`/users/search`|anyone|Search by username|[ ]|
+|GET|`/users/id/:_id`|user|Get user data by Id|[ ]|
+|PUT|`/users`|user|Update own information|[ ]|
+|PUT|`/users/follow/:_id`|user|Follow user by Id|[ ]|
+|DELETE|`/users/logout`|user|Logout|[ ]|
+|DELETE|`/users/follow/:_id`|user|Stop following user by Id|[ ]|
+|POST|`/posts`|user|Create a post|[ ]|
+|GET|`/posts/id/:_id`|anyone|Get a post by Id|[ ]|
+|GET|`/posts/search`|anyone|Search a post by title|[ ]|
+|GET|`/posts`|anyone|Get all posts|[ ]|
+|PUT|`/posts/like/id/:_id`|user|Like a post by Id|[ ]|
+|PUT|`/posts/id/:_id`|author|Update own posts by Id|[ ]|
+|DELETE|`/posts/id/:_id`|author|Delete own post by Id|[ ]|
+|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|[ ]|
+|POST|`/comments`|user|Create a comment to a post|[ ]|
+|GET|`/comments/id/:_id`|anyone|Get a comment by Id|[ ]|
+|PUT|`/comments/id/:_id`|author|Update own comment by Id|[ ]|
+|PUT|`/comments/like/:_id`|user|Like a comment by Id|[ ]|
+|DELETE|`/comments/id/:_id`|author|Delete own comment by Id|[ ]|
+|DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|[ ]|
