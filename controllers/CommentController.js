@@ -22,7 +22,7 @@ const CommentController = {
                 req.user._id,
                 { $push: { comments: comment._id } }
             );
-            res.status(201).send({ msg: "Comment created", comment, post });
+            return res.status(201).send({ msg: "Comment created", comment, post });
         } catch (error) {
             error.origin = 'comment';
             error.suborigin = 'create';
@@ -40,7 +40,7 @@ const CommentController = {
             await User.findByIdAndUpdate(comment.author,
                 { $pull: { comments: comment._id } }
             );
-            res.send({ msg: "Comment deleted", comment });
+            return res.send({ msg: "Comment deleted", comment });
         } catch (error) {
             error.origin = 'comment';
             error.suborigin = 'delete';
@@ -61,7 +61,7 @@ const CommentController = {
                 updatedComment,
                 { new: true }
             );
-            res.send({ msg: "Comment updated", comment });
+            return res.send({ msg: "Comment updated", comment });
         } catch (error) {
             error.origin = 'comment';
             error.suborigin = 'update';
@@ -71,8 +71,14 @@ const CommentController = {
     async getById(req, res, next) {
         try {
             const comment = await Comment.findById(req.params._id)
-                .populate({ path: 'author', select: { username: 1, avatar: 1 } })
-                .populate({ path: 'likes', select: { username: 1, avatar: 1 } });
+                .populate({
+                    path: 'author',
+                    select: { username: 1, avatar: 1, role: 1 }
+                })
+                .populate({
+                    path: 'likes',
+                    select: { username: 1, avatar: 1, role: 1 }
+                });
             return res.send({ msg: "Comment", comment });
         } catch (error) {
             error.origin = 'comment';
@@ -94,7 +100,7 @@ const CommentController = {
                 );
                 return res.send({ msg: "Comment liked", comment });
             } else {
-                res.status(400).send({ msg: "Error liking unexistent comment" });
+                return res.status(400).send({ msg: "Error liking comment" });
             }
         } catch (error) {
             error.origin = 'comment';

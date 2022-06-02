@@ -27,8 +27,8 @@ const PostController = {
     async getById(req, res, next) {
         try {
             const post = await Post.findById(req.params._id)
-                .populate('author', { username: 1, avatar: 1 })
-                .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1 } } });
+                .populate('author', { username: 1, avatar: 1, role: 1 })
+                .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1, role: 1 } } });
             return res.send(post);
         } catch (error) {
             error.origin = 'post';
@@ -43,7 +43,7 @@ const PostController = {
             }
             const title = new RegExp(req.params.title, 'i');
             const posts = await Post.find({ title })
-                .populate('author', { username: 1, avatar: 1 });
+                .populate('author', { username: 1, avatar: 1, role: 1 });
             return res.send(posts);
         } catch (error) {
             error.origin = 'post';
@@ -72,7 +72,7 @@ const PostController = {
                     path: 'comments',
                     populate: { path: 'author', select: { username: 1, avatar: 1, role: 1 } }
                 });
-            res.send({ msg: "All posts", total, page, maxPages, posts });
+            return res.send({ msg: "All posts", total, page, maxPages, posts });
         } catch (error) {
             error.origin = 'post';
             error.suborigin = 'getAll';
@@ -110,7 +110,7 @@ const PostController = {
                 req.user_id,
                 { $pull: { comments: req.params._id } }
             );
-            res.send({ msg: "Post deleted", post });
+            return res.send({ msg: "Post deleted", post });
         } catch (error) {
             error.origin = 'post';
             error.suborigin = 'delete';

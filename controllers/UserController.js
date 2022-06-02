@@ -153,7 +153,7 @@ const UserController = {
                 // { tokens: 0, confirmed: 0, active: 0, passhash: 0 })
                 .populate('posts', { author: 0 })
                 .populate('comments', { author: 0, postId: 0 })
-                .populate({ path: 'followers', select: { username: 1, avatar: 1 } });
+                .populate({ path: 'followers', select: { username: 1, avatar: 1, role: 1 } });
             return res.send({
                 msg: "User data",
                 user,

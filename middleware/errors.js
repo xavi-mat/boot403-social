@@ -13,7 +13,7 @@ const typeError = (err, req, res, next) => {
         if (!err.origin) {
             res.status(500).send({ msg: 'ERROR' });
         } else {
-            res.status(500).send({ msg: `Error: ${err.suborigin} (${err.origin})` });
+            res.status(400).send({ msg: `Error: ${err.suborigin}-${err.origin}` });
         }
 }
 
