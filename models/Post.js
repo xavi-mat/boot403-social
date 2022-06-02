@@ -3,16 +3,16 @@ const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: [true, 'post title is required'],
     },
     body: {
         type: String,
-        required: true
+        required: [true, 'post content is required'],
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        required: [true,, 'post author\'s userId is required'],
     },
     image: String,
     comments: [{

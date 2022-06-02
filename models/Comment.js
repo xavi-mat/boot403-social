@@ -5,16 +5,16 @@ const CommentSchema = new mongoose.Schema({
     postId: {
         type: ObjectId,
         ref: "Post",
-        required: true,
+        required: [true, 'postId is required'],
     },
     text: {
         type: String,
-        required: true,
+        required: [true, 'text is required'],
     },
     author: {
         type: ObjectId,
         ref: "User",
-        required: true,
+        required: [true, 'Comment author\'s userId is required'],
     },
     image: String,
     likes: [{
