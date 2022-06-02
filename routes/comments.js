@@ -10,7 +10,7 @@ router.get('/id/:_id', CommentController.getById);
 router.put('/id/:_id', authentication, isCommentAuthor, uploadImg.single('image'),
     CommentController.update);
 router.put('/like/:_id', authentication, CommentController.like);
-router.delete('/like/:_id', authentication, CommentController.unlike);
 router.delete('/id/:_id', authentication, isCommentAuthor, CommentController.delete);
+router.delete('/like/:_id', authentication, CommentController.unlike);
 
 module.exports = router;
