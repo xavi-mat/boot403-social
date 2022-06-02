@@ -206,6 +206,9 @@ const UserController = {
     },
     async follow(req, res, next) {
         try {
+            if (req.user._id.toString() === req.params._id) {
+                return res.send({ msg: "Cant't follow yourself" });
+            }
             const user = await User.findOneAndUpdate(
                 { _id: req.params._id, followers: { $nin: req.user._id } },
                 { $push: { followers: req.user._id } }
@@ -248,15 +251,28 @@ const UserController = {
     },
     async searchByUsername(req, res, next) {
         try {
-            if (req.params.username.length > 30) {
-                return res.send({ msg: "Search string too long" });
+            let { page = 1, limit = 10, name } = req.query;
+            if (name === undefined) {
+                return res.status(400).send({ msg: 'name is required' });
             }
-            const username = new RegExp(req.params.username, 'i');
+            if (name.length > 30) {
+                return res.status(400).send({ msg: "Search string too long" });
+            }
+            // Pagination
+            if (isNaN(limit)) { limit = 10; }
+            limit = Math.max(1, Math.min(limit, 20));
+            const username = new RegExp(name, 'i');
+            const total = await User.count({ username, role: { $nin: 'admin' } });
+            const maxPages = Math.ceil(total / limit);
+            // Current page
+            if (isNaN(page)) { page = 1; }
+            page = Math.max(1, Math.min(page, maxPages))
             const users = await User.find(
                 { username, role: { $nin: 'admin' } },
-                { username: 1, avatar: 1, role: 1 }
-            );
-            return res.send(users);
+                { username: 1, avatar: 1, role: 1 })
+                .limit(limit)
+                .skip(limit * (page - 1));
+            return res.send({msg:"Users found", total, page, maxPages, users});
         } catch (error) {
             error.origin = 'user';
             error.suborigin = 'searchByUsername';

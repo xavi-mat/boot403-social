@@ -6,16 +6,11 @@ const router = express.Router();
 const { uploadImg } = require("../middleware/multer");
 
 router.post('/', authentication, uploadImg.single('image'), CommentController.create);
-router.delete('/id/:_id', authentication, isCommentAuthor, CommentController.delete);
-router.put(
-    '/id/:_id',
-    authentication,
-    isCommentAuthor,
-    uploadImg.single('image'),
-    CommentController.update
-);
 router.get('/id/:_id', CommentController.getById);
-router.post('/like/:_id', authentication, CommentController.like);
+router.put('/id/:_id', authentication, isCommentAuthor, uploadImg.single('image'),
+    CommentController.update);
+router.put('/like/:_id', authentication, CommentController.like);
 router.delete('/like/:_id', authentication, CommentController.unlike);
+router.delete('/id/:_id', authentication, isCommentAuthor, CommentController.delete);
 
 module.exports = router;

@@ -121,7 +121,7 @@ const CommentController = {
                 );
                 return res.send({ msg: "Comment unliked" });
             } else {
-                res.status(400).send({ msg: "Error unliking unexistent comment" });
+                res.status(400).send({ msg: "Error unliking comment" });
             }
         } catch (error) {
             error.origin = 'comment';

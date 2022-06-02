@@ -29,22 +29,37 @@ const PostController = {
             const post = await Post.findById(req.params._id)
                 .populate('author', { username: 1, avatar: 1, role: 1 })
                 .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1, role: 1 } } });
-            return res.send(post);
+            return res.send({ msg: "Post", post });
         } catch (error) {
             error.origin = 'post';
             error.suborigin = 'getById';
             next(error);
         }
     },
-    async getByTitle(req, res, next) {
+    async searchByTitle(req, res, next) {
         try {
-            if (req.params.title.length > 30) {
-                return res.send({ msg: "String too long" });
+            let { page = 1, limit = 10, title } = req.query;
+            if (title === undefined) {
+                return res.status(400).send({ msg: 'name is required' });
             }
-            const title = new RegExp(req.params.title, 'i');
-            const posts = await Post.find({ title })
+            if (title.length > 30) {
+                return res.status(400).send({ msg: "Search string too long" });
+            }
+            // Pagination
+            if (isNaN(limit)) { limit = 10; }
+            limit = Math.max(1, Math.min(limit, 20));
+            const titleRgx = new RegExp(title, 'i');
+            const total = await Post.count({ titleRgx });
+            const maxPages = Math.ceil(total / limit);
+            // Current page
+            if (isNaN(page)) { page = 1; }
+            page = Math.max(1, Math.min(page, maxPages));
+            const posts = await Post.find({ titleRgx })
+                .sort('-updatedAt')
+                .limit(limit)
+                .skip(limit * (page - 1))
                 .populate('author', { username: 1, avatar: 1, role: 1 });
-            return res.send(posts);
+            return res.send({ msg: "Posts found", total, page, maxPages, posts });
         } catch (error) {
             error.origin = 'post';
             error.suborigin = 'getByTitle';
@@ -131,7 +146,7 @@ const PostController = {
                 );
                 return res.send({ msg: "Post liked", post });
             } else {
-                return res.status(400).send({ msg: 'Error liking unexistent post' });
+                return res.status(400).send({ msg: 'Error liking post' });
             }
         } catch (error) {
             error.origin = 'post';
@@ -152,7 +167,7 @@ const PostController = {
                 );
                 return res.send({ msg: "Post unliked" });
             } else {
-                return res.send({ msg: "Error unliking inexistent post" });
+                return res.send({ msg: "Error unliking post" });
             }
         } catch (error) {
             error.origin = 'post';
