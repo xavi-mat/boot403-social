@@ -22,6 +22,18 @@ const authentication = async (req, res, next) => {
     }
 }
 
+const isAdmin = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).send({ msg: "Forbidden" });
+        }
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({ msg: "Error" })
+    }
+}
+
 const isPostAuthor = async (req, res, next) => {
     try {
         const post = await Post.findOne(
@@ -52,4 +64,4 @@ const isCommentAuthor = async (req, res, next) => {
     }
 }
 
-module.exports = { authentication, isPostAuthor, isCommentAuthor };
+module.exports = { authentication, isAdmin, isPostAuthor, isCommentAuthor };

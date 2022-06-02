@@ -1,7 +1,7 @@
 'use strict';
 const express = require("express");
 const UserController = require("../controllers/UserController");
-const { authentication } = require("../middleware/authentication");
+const { authentication, isAdmin } = require("../middleware/authentication");
 const router = express.Router();
 const { uploadAvatar } = require("../middleware/multer");
 
@@ -15,6 +15,6 @@ router.put('/', authentication, uploadAvatar.single('avatar'), UserController.up
 router.put('/follow/:_id', authentication, UserController.follow);
 router.delete('/logout', authentication, UserController.logout);
 router.delete('/follow/:_id', authentication, UserController.unfollow);
-router.delete('/clean-all', UserController.cleanAll);
+router.delete('/clean-all', authentication, isAdmin, UserController.cleanAll);
 
 module.exports = router;
