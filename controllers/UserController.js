@@ -8,7 +8,7 @@ const fs = require("fs");  // Used for the fakeEmail
 const { faker } = require("@faker-js/faker");
 
 const UserController = {
-    async register(req, res) {
+    async register(req, res, next) {
         try {
             // Need data
             if (!req.body.username || !req.body.email || !req.body.password) {
@@ -100,7 +100,7 @@ const UserController = {
                             postId: newPost._id,
                             text: faker.lorem.paragraph(),
                             author: usersId[Math.floor(Math.random() * usersId.length)],
-                            image: faker.image.cats(),
+                            image: faker.image.cats(300, 300, true),
                         };
                         const newComment = await Comment.create(comment);
                         await Post.findByIdAndUpdate(newPost._id, { $push: { comments: newComment._id } });
@@ -145,10 +145,12 @@ const UserController = {
     async getData(req, res) {
         try {
             const user = await User.findById(
-                req.user._id,
-                { tokens: 0, confirmed: 0, active: 0, passhash: 0 })
+                req.user._id)
+                // { tokens: 0, confirmed: 0, active: 0, passhash: 0 })
                 .populate('posts', { author: 0 })
+                .populate('comments', { author: 0, postId: 0 })
                 .populate({ path: 'followers', select: { username: 1, avatar: 1 } });
+            console.log("user.passhash", user);
             return res.send({
                 msg: "User data",
                 user,

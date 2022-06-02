@@ -1,5 +1,4 @@
 const { Post, User } = require("../models/");
-const PER_PAGE = 10;
 
 const PostController = {
     async create(req, res) {
@@ -52,21 +51,23 @@ const PostController = {
     async getAll(req, res) {
         try {
             // Pagination
-            let page = req.params.page;
-            if (isNaN(page) || page < 1) {
-                page = 1;
-            }
+            let { page = 1, limit = 10 } = req.query;
+            // Limit per page:
+            if (isNaN(limit)) { limit = 10; }
+            limit = Math.max(1, Math.min(limit, 20));
             const total = await Post.count();
-            const maxPages = Math.ceil(total / PER_PAGE);
-            page = Math.min(page, maxPages);
+            const maxPages = Math.ceil(total / limit);
+            // Current page
+            if (isNaN(page)) { page = 1; }
+            page = Math.max(1, Math.min(page, maxPages));
             const posts = await Post.find()
                 .sort('-updatedAt')
-                .limit(PER_PAGE)
-                .skip(PER_PAGE * (page - 1))
+                .limit(limit)
+                .skip(limit * (page - 1))
                 .populate('author', { username: 1, avatar: 1, role: 1 })
                 .populate({
                     path: 'comments',
-                    populate: { path: 'author', select: { username: 1, avatar: 1 } }
+                    populate: { path: 'author', select: { username: 1, avatar: 1, role: 1 } }
                 });
             res.send({ msg: "All posts", total, page, maxPages, posts });
         } catch (error) {
