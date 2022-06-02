@@ -61,6 +61,7 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 |PUT|`/comments/like/:_id`|user|Like a comment by Id|[x]|
 |DELETE|`/comments/id/:_id`|author|Delete own comment by Id|[x]|
 |DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|[x]|
+|DELETE|`/users/clean-all`|admin|Empty database and seed it randomly|[x]|
 
 See detailed examples of requests and responses in:
 https://documenter.getpostman.com/view/11287519/Uz5FLcd7
