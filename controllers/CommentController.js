@@ -18,6 +18,10 @@ const CommentController = {
                 { $push: { comments: comment._id } },
                 { new: true }
             );
+            if (!post) {
+                await Comment.findByIdAndDelete(comment._id);
+                return res.status(400).send({msg:"Post does not exist"});
+            }
             await User.findByIdAndUpdate(
                 req.user._id,
                 { $push: { comments: comment._id } }
