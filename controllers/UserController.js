@@ -154,7 +154,6 @@ const UserController = {
                 .populate('posts', { author: 0 })
                 .populate('comments', { author: 0, postId: 0 })
                 .populate({ path: 'followers', select: { username: 1, avatar: 1 } });
-            console.log("user.passhash", user);
             return res.send({
                 msg: "User data",
                 user,
