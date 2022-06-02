@@ -1,7 +1,7 @@
 const { Post, User } = require("../models/");
 
 const PostController = {
-    async create(req, res) {
+    async create(req, res, next) {
         try {
             const image = req.file ?
                 `http://localhost:8080/imgs/${req.file.filename}` :
@@ -19,22 +19,24 @@ const PostController = {
             );
             return res.status(201).send({ msg: "Post created", post });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error creating post', error });
+            error.origin = 'post';
+            error.suborigin = 'create';
+            next(error);
         }
     },
-    async getById(req, res) {
+    async getById(req, res, next) {
         try {
             const post = await Post.findById(req.params._id)
                 .populate('author', { username: 1, avatar: 1 })
                 .populate({ path: 'comments', populate: { path: 'author', select: { username: 1, avatar: 1 } } });
             return res.send(post);
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error getting post' });
+            error.origin = 'post';
+            error.suborigin = 'getById';
+            next(error);
         }
     },
-    async getByTitle(req, res) {
+    async getByTitle(req, res, next) {
         try {
             if (req.params.title.length > 30) {
                 return res.send({ msg: "String too long" });
@@ -44,11 +46,12 @@ const PostController = {
                 .populate('author', { username: 1, avatar: 1 });
             return res.send(posts);
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error getting posts' });
+            error.origin = 'post';
+            error.suborigin = 'getByTitle';
+            next(error);
         }
     },
-    async getAll(req, res) {
+    async getAll(req, res, next) {
         try {
             // Pagination
             let { page = 1, limit = 10 } = req.query;
@@ -71,11 +74,12 @@ const PostController = {
                 });
             res.send({ msg: "All posts", total, page, maxPages, posts });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error getting posts' });
+            error.origin = 'post';
+            error.suborigin = 'getAll';
+            next(error);
         }
     },
-    async update(req, res) {
+    async update(req, res, next) {
         try {
             const image = req.file ?
                 `http://localhost:8080/imgs/${req.file.filename}` :
@@ -92,11 +96,12 @@ const PostController = {
             );
             return res.send({ msg: "Post updated", post });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error updating post' });
+            error.origin = 'post';
+            error.suborigin = 'update';
+            next(error);
         }
     },
-    async delete(req, res) {
+    async delete(req, res, next) {
         try {
             const post = await Post.findOneAndDelete(
                 { _id: req.params._id, author: req.user._id }
@@ -107,11 +112,12 @@ const PostController = {
             );
             res.send({ msg: "Post deleted", post });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error deleting post' });
+            error.origin = 'post';
+            error.suborigin = 'delete';
+            next(error);
         }
     },
-    async like(req, res) {
+    async like(req, res, next) {
         try {
             const post = await Post.findOneAndUpdate(
                 { _id: req.params._id, likes: { $nin: req.user._id } },
@@ -128,11 +134,12 @@ const PostController = {
                 return res.status(400).send({ msg: 'Error liking unexistent post' });
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Error liking post' });
+            error.origin = 'post';
+            error.suborigin = 'like';
+            next(error);
         }
     },
-    async unlike(req, res) {
+    async unlike(req, res, next) {
         try {
             const post = await Post.findByIdAndUpdate(
                 req.params._id,
@@ -148,8 +155,9 @@ const PostController = {
                 return res.send({ msg: "Error unliking inexistent post" });
             }
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error unliking post' });
+            error.origin = 'post';
+            error.suborigin = 'unlike';
+            next(error);
         }
     }
 };

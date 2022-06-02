@@ -1,7 +1,7 @@
 const { Comment, Post, User } = require("../models/");
 
 const CommentController = {
-    async create(req, res) {
+    async create(req, res, next) {
         try {
             const image = req.file ?
                 `http://localhost:8080/imgs/${req.file.filename}` :
@@ -24,11 +24,12 @@ const CommentController = {
             );
             res.status(201).send({ msg: "Comment created", comment, post });
         } catch (error) {
-            console.error(error);
-            res.status(400).send({ msg: "Error creating comment" });
+            error.origin = 'comment';
+            error.suborigin = 'create';
+            next(error);
         }
     },
-    async delete(req, res) {
+    async delete(req, res, next) {
         try {
             const comment = await Comment.findOneAndDelete(
                 { _id: req.params._id, author: req.user._id }
@@ -41,11 +42,12 @@ const CommentController = {
             );
             res.send({ msg: "Comment deleted", comment });
         } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: "Error deleting comment" });
+            error.origin = 'comment';
+            error.suborigin = 'delete';
+            next(error);
         }
     },
-    async update(req, res) {
+    async update(req, res, next) {
         try {
             const image = req.file ?
                 `http://localhost:8080/imgs/${req.file.filename}` :
@@ -61,22 +63,24 @@ const CommentController = {
             );
             res.send({ msg: "Comment updated", comment });
         } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: "Error updating comment" });
+            error.origin = 'comment';
+            error.suborigin = 'update';
+            next(error);
         }
     },
-    async getById(req, res) {
+    async getById(req, res, next) {
         try {
             const comment = await Comment.findById(req.params._id)
                 .populate({ path: 'author', select: { username: 1, avatar: 1 } })
                 .populate({ path: 'likes', select: { username: 1, avatar: 1 } });
             return res.send({ msg: "Comment", comment });
         } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: "Error getting comment" });
+            error.origin = 'comment';
+            error.suborigin = 'getById';
+            next(error);
         }
     },
-    async like(req, res) {
+    async like(req, res, next) {
         try {
             const comment = await Comment.findOneAndUpdate(
                 { _id: req.params._id, likes: { $nin: req.user._id } },
@@ -93,11 +97,12 @@ const CommentController = {
                 res.status(400).send({ msg: "Error liking unexistent comment" });
             }
         } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: "Error liking comment" });
+            error.origin = 'comment';
+            error.suborigin = 'like';
+            next(error);
         }
     },
-    async unlike(req, res) {
+    async unlike(req, res, next) {
         try {
             const comment = await Comment.findByIdAndUpdate(
                 req.params._id,
@@ -113,8 +118,9 @@ const CommentController = {
                 res.status(400).send({ msg: "Error unliking unexistent comment" });
             }
         } catch (error) {
-            console.error(error);
-            res.status(500).send({ msg: "Error unliking comment" });
+            error.origin = 'comment';
+            error.suborigin = 'unlike';
+            next(error);
         }
     }
 };

@@ -45,11 +45,12 @@ const UserController = {
                 user,
             });
         } catch (error) {
-            console.error(error)
-            return res.status(400).send({ msg: 'Error creating user' })
+            error.origin = 'user';
+            error.suborigin = 'create';
+            next(error);
         }
     },
-    async confirmEmail(req, res) {
+    async confirmEmail(req, res, next) {
         try {
             const token = req.params.emailToken;
             const payload = jwt.verify(token, jwt_secret);
@@ -59,11 +60,12 @@ const UserController = {
             );
             return res.redirect('/');
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error verifying email' });
+            error.origin = 'user';
+            error.suborigin = 'confirmEmail';
+            next(error);
         }
     },
-    async cleanAll(req, res) {
+    async cleanAll(req, res, next) {
         try {
             // Empty all
             const users = await User.deleteMany({});
@@ -110,11 +112,12 @@ const UserController = {
             });
             return res.send({ msg: "Cleaned", users, posts, comments })
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error cleaning' });
+            error.origin = 'user';
+            error.suborigin = 'cleanAll';
+            next(error);
         }
     },
-    async login(req, res) {
+    async login(req, res, next) {
         try {
             const user = await User.findOne({ email: req.body.email });
             if (!user) {
@@ -138,11 +141,12 @@ const UserController = {
             user.confirmed = undefined;
             return res.send({ msg: `Welcome ${user.username}`, token, user });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Login error' });
+            error.origin = 'user';
+            error.suborigin = 'login';
+            next(error);
         }
     },
-    async getData(req, res) {
+    async getData(req, res, next) {
         try {
             const user = await User.findById(
                 req.user._id)
@@ -157,11 +161,12 @@ const UserController = {
                 followersCount: user.followers.length
             });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Error getting data' });
+            error.origin = 'user';
+            error.suborigin = 'getData';
+            next(error);
         }
     },
-    async logout(req, res) {
+    async logout(req, res, next) {
         try {
             await User.findByIdAndUpdate(
                 req.user._id,
@@ -169,11 +174,12 @@ const UserController = {
             );
             return res.send({ msg: "Logout successful" });
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Logout error' });
+            error.origin = 'user';
+            error.suborigin = 'logout';
+            next(error);
         }
     },
-    async update(req, res) {
+    async update(req, res, next) {
         try {
             // Can only update some fields
             const avatar = req.file ?
@@ -194,11 +200,12 @@ const UserController = {
             user.confirmed = undefined;
             return res.send({ msg: "Updated", user });
         } catch (error) {
-            console.error(error);
-            return res.status(400).send({ msg: 'Update error' });
+            error.origin = 'user';
+            error.suborigin = 'update';
+            next(error);
         }
     },
-    async follow(req, res) {
+    async follow(req, res, next) {
         try {
             const user = await User.findOneAndUpdate(
                 { _id: req.params._id, followers: { $nin: req.user._id } },
@@ -214,11 +221,12 @@ const UserController = {
                 return res.status(400).send({ msg: 'Error following user' });
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Error following user' });
+            error.origin = 'user';
+            error.suborigin = 'follow';
+            next(error);
         }
     },
-    async unfollow(req, res) {
+    async unfollow(req, res, next) {
         try {
             const user = await User.findOneAndUpdate(
                 { _id: req.params._id, followers: { $in: req.user._id } },
@@ -234,11 +242,12 @@ const UserController = {
                 return res.status(400).send({ msg: 'Error unfollowing user' });
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Error unfollowing user' });
+            error.origin = 'user';
+            error.suborigin = 'unfollow';
+            next(error);
         }
     },
-    async searchByUsername(req, res) {
+    async searchByUsername(req, res, next) {
         try {
             if (req.params.username.length > 30) {
                 return res.send({ msg: "Search string too long" });
@@ -250,11 +259,12 @@ const UserController = {
             );
             return res.send(users);
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Error searching users' });
+            error.origin = 'user';
+            error.suborigin = 'searchByUsername';
+            next(error);
         }
     },
-    async getById(req, res) {
+    async getById(req, res, next) {
         try {
             const user = await User.findById(
                 req.params._id,
@@ -262,8 +272,9 @@ const UserController = {
             );
             return res.send(user);
         } catch (error) {
-            console.error(error);
-            return res.status(500).send({ msg: 'Error searching user' });
+            error.origin = 'user';
+            error.suborigin = 'getById';
+            next(error);
         }
     }
 }

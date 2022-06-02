@@ -13,16 +13,15 @@ const handleValidationError = (err, res) => {
  }
 
 const typeError = (err, req, res, next) => {
-    const errOrigin = err.origin
     if(err.name === 'ValidationError') return err = handleValidationError(err, res);
     else if (err.code === 11000) {
         res.status(400).send('El correo tiene que ser único')
     }
     else
-        if (errOrigin === undefined) {
+        if (err.origin === undefined) {
             res.status(500).send('Se ha producido un error de origen desconocido');
         } else {
-            res.status(500).send(`Hubo un problema a la hora de crear un ${errOrigin}`);
+            res.status(500).send(`Hubo un problema a la hora de crear un ${err.origin}`);
         }
     }
 
