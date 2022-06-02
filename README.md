@@ -35,8 +35,8 @@ https://github.com/xavi-mat/boot403-social
 ### Usage
 There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 
-|method|endpoint|role|use|[ ]|
-|------|--------|----|---|[ ]|
+|method|endpoint|role|use|done|
+|------|--------|----|---|----|
 |POST|`/users`|anyone|Get all users|[ ]|
 |POST|`/users/login`|anyone|Login with credentials|[ ]|
 |GET|`/users`|user|Get own user's data|[ ]|
