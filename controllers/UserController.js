@@ -1,7 +1,7 @@
 const { User, Post, Comment } = require("../models/");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { jwt_secret } = require("../config/config.json")["development"];
+const { jwt_secret } = require("../config/keys");
 const transporter = require("../config/nodemailer");
 const confirmEmailHTML = require("../templates/confirmEmailHTML");
 const fs = require("fs");  // Used for the fakeEmail

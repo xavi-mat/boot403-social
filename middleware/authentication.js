@@ -1,7 +1,7 @@
 'use strict';
 const { User, Post, Comment } = require("../models/");
 const jwt = require("jsonwebtoken");
-const { jwt_secret } = require("../config/config.json")["development"];
+const { jwt_secret } = require("../config/keys");
 
 
 const authentication = async (req, res, next) => {
