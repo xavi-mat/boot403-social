@@ -1,28 +1,20 @@
 const handleValidationError = (err, res) => {
     let errors = Object.values(err.errors).map(el => el.message);
-    if(errors.length > 1) {
-        let chain = "";
-        for (let i = 0; i < errors.length; i++) {
-          chain += errors[i] + " || ";
-        }
-        const string = chain.slice(0, -4);
-        res.status(400).send({messages: string});
-    } else {
-        res.status(400).send({message: errors});
-    }
- }
+    res.status(400).send({ msg: errors });
+}
 
 const typeError = (err, req, res, next) => {
-    if(err.name === 'ValidationError') return err = handleValidationError(err, res);
+    console.log(err);
+    if (err.name === 'ValidationError') return err = handleValidationError(err, res);
     else if (err.code === 11000) {
-        res.status(400).send('El correo tiene que ser único')
+        res.status(400).send({ msg: 'Unique constraint error: ' + Object.keys(err.keyPattern) })
     }
     else
-        if (err.origin === undefined) {
-            res.status(500).send('Se ha producido un error de origen desconocido');
+        if (!err.origin) {
+            res.status(500).send({ msg: 'ERROR' });
         } else {
-            res.status(500).send(`Hubo un problema a la hora de crear un ${err.origin}`);
+            res.status(500).send({ msg: `Error: ${err.suborigin} (${err.origin})` });
         }
-    }
+}
 
 module.exports = { typeError }

@@ -10,10 +10,10 @@ const { faker } = require("@faker-js/faker");
 const UserController = {
     async register(req, res, next) {
         try {
-            // Need data
-            if (!req.body.username || !req.body.email || !req.body.password) {
-                return res.status(400).send({ msg: "Data required: username, email, password" });
-            }
+            // // Need data
+            // if (!req.body.username || !req.body.email || !req.body.password) {
+            //     return res.status(400).send({ msg: "Data required: username, email, password" });
+            // }
             req.body.role = "user"; // Assing role by default
             req.body.passhash = bcrypt.hashSync(req.body.password, 10);
             req.body.avatar = 'http://localhost:8080/avatars/avatar.png';

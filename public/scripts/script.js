@@ -44,7 +44,7 @@ async function goHome() {
 
 async function getPosts(page=1) {
     try {
-        const txt = '/posts/page/' + page;
+        const txt = '/posts?page=' + page;
         putInReq('GET', txt);
         const result = await axios('http://localhost:8080' + txt);
         putInRes(JSON.stringify(result.data, null, 2));
