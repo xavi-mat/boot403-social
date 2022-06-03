@@ -34,13 +34,16 @@ const UserController = {
                 emailToken,
                 MAIN_URL
             );
-            await transporter.sendMail({
-                to: req.body.email,
-                subject: "Confirme su registro",
-                html: confirmEmailContent,
-            });
+
+            // Need a working email:
+            // await transporter.sendMail({
+            //     to: req.body.email,
+            //     subject: "Confirme su registro",
+            //     html: confirmEmailContent,
+            // });
+
             // Fake email: Create html web with link
-            fs.writeFileSync('fakeEmail.html', confirmEmailContent);
+            fs.writeFileSync('public/fakeEmail.html', confirmEmailContent);
             return res.status(201).send({
                 msg: "We have sent a mail to confirm the registration",
                 user,
