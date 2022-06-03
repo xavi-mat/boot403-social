@@ -39,6 +39,7 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.methods.toJSON = function () {
     const user = this._doc;
+    user.followersCount = user.followers.length;
     delete user.tokens;
     delete user.passhash;
     return user;

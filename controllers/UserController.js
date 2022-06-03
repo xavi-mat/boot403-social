@@ -1,7 +1,8 @@
 const { User, Post, Comment } = require("../models/");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { jwt_secret } = require("../config/keys");
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET;
 const transporter = require("../config/nodemailer");
 const confirmEmailHTML = require("../templates/confirmEmailHTML");
 const fs = require("fs");  // Used for the fakeEmail
@@ -22,7 +23,7 @@ const UserController = {
             const user = await User.create(req.body);
             const emailToken = jwt.sign(
                 { email: req.body.email },
-                jwt_secret,
+                JWT_SECRET,
                 { expiresIn: "48h", }
             );
             const url = "http://localhost:8080/users/confirm/" + emailToken;
@@ -53,7 +54,7 @@ const UserController = {
     async confirmEmail(req, res, next) {
         try {
             const token = req.params.emailToken;
-            const payload = jwt.verify(token, jwt_secret);
+            const payload = jwt.verify(token, JWT_SECRET);
             await User.updateOne(
                 { email: payload.email },
                 { confirmed: true }
@@ -134,7 +135,7 @@ const UserController = {
             if (!user.confirmed) {
                 return res.send({ msg: "Please, confirm your email" });
             }
-            const token = jwt.sign({ _id: user._id }, jwt_secret);
+            const token = jwt.sign({ _id: user._id }, JWT_SECRET);
             while (user.tokens.length > 4) {
                 user.tokens.shift();
             }
