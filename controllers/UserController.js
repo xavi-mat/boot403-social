@@ -162,7 +162,7 @@ const UserController = {
             return res.send({
                 msg: "User data",
                 user,
-                followersCount: user.followers.length
+                // followersCount: user.followers.length
             });
         } catch (error) {
             error.origin = 'user';
