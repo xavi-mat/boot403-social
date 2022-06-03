@@ -1,10 +1,12 @@
 const { Comment, Post, User } = require("../models/");
+require("dotenv").config();
+const MAIN_URL = process.env.MAIN_URL;
 
 const CommentController = {
     async create(req, res, next) {
         try {
             const image = req.file ?
-                `http://localhost:8080/imgs/${req.file.filename}` :
+                `${MAIN_URL}/imgs/${req.file.filename}` :
                 undefined;
             const newComment = {
                 postId: req.body.postId,
@@ -54,7 +56,7 @@ const CommentController = {
     async update(req, res, next) {
         try {
             const image = req.file ?
-                `http://localhost:8080/imgs/${req.file.filename}` :
+                `${MAIN_URL}/imgs/${req.file.filename}` :
                 undefined;
             const updatedComment = {
                 text: req.body.text,

@@ -1,10 +1,5 @@
 'use strict';
 
-// const username = "SomeUsername"
-// const email = "some@email.com"
-// const token = "somesupersecrettoken";
-// const domain = 'http://localhost:8080'
-
 const confirmEmailHTML = (username, email, token, domain) => {
 
     const lang = 'es';

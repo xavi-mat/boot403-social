@@ -17,7 +17,7 @@ const UserController = {
             }
             req.body.role = "user"; // Assing role by default
             req.body.passhash = bcrypt.hashSync(req.body.password, 10);
-            req.body.avatar = 'http://localhost:8080/avatars/avatar.png';
+            req.body.avatar = MAIN_URL+'/avatars/avatar.png';
             req.body.confirmed = false;
             req.body.active = true;
             const user = await User.create(req.body);
@@ -26,19 +26,18 @@ const UserController = {
                 JWT_SECRET,
                 { expiresIn: "48h", }
             );
-            const url = "http://localhost:8080/users/confirm/" + emailToken;
+            const url = MAIN_URL+"/users/confirm/" + emailToken;
             const confirmEmailContent = confirmEmailHTML(
                 req.body.username,
                 req.body.email,
                 emailToken,
-                'http://localhost:8080'
+                MAIN_URL
             );
-            // 🚨🚨🚨 Check if port 465 is closed🚨🚨🚨
-            // await transporter.sendMail({
-            //     to: req.body.email,
-            //     subject: "Confirme su registro",
-            //     html: confirmEmailContent,
-            // });
+            await transporter.sendMail({
+                to: req.body.email,
+                subject: "Confirme su registro",
+                html: confirmEmailContent,
+            });
             // Fake email: Create html web with link
             fs.writeFileSync('fakeEmail.html', confirmEmailContent);
             return res.status(201).send({
@@ -187,7 +186,7 @@ const UserController = {
         try {
             // Can only update some fields
             const avatar = req.file ?
-                `http://localhost:8080/avatars/${req.file.filename}` :
+                `${MAIN_URL}/avatars/${req.file.filename}` :
                 undefined;
 
             const updatedUser = {

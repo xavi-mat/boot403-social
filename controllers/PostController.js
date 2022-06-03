@@ -1,10 +1,12 @@
 const { Post, User } = require("../models/");
+require("dotenv").config();
+const MAIN_URL = process.env.MAIN_URL;
 
 const PostController = {
     async create(req, res, next) {
         try {
             const image = req.file ?
-                `http://localhost:8080/imgs/${req.file.filename}` :
+                `${MAIN_URL}/imgs/${req.file.filename}` :
                 undefined;
             const newPost = {
                 title: req.body.title,
@@ -97,7 +99,7 @@ const PostController = {
     async update(req, res, next) {
         try {
             const image = req.file ?
-                `http://localhost:8080/imgs/${req.file.filename}` :
+                `${MAIN_URL}/imgs/${req.file.filename}` :
                 undefined;
             const updatedPost = {
                 title: req.body.title,

@@ -7,7 +7,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
-
+const MAIN_URL = window.location.origin;
 
 ////////////////////////////////////////////////////////////////////////////////
 // DOM
@@ -58,7 +58,7 @@ async function getPosts(page = 1) {
     try {
         const txt = '/posts?page=' + page;
         putInReq('GET', txt);
-        const result = await axios('http://localhost:8080' + txt);
+        const result = await axios(MAIN_URL + txt);
         putInRes(result.data);
         return result.data;
     } catch (error) {
@@ -135,7 +135,7 @@ async function goUser(userId) {
     try {
         const txt = '/users/id/' + userId;
         putInReq('GET', txt);
-        const resp = await axios('http://localhost:8080' + txt);
+        const resp = await axios(MAIN_URL + txt);
         putInRes(resp.data);
         showUserData(resp.data.user);
     } catch (error) {
@@ -205,7 +205,7 @@ async function goLogin(ev) {
         if (pass && email) {
             const config = {
                 method: 'post',
-                url: 'http://localhost:8080/users/login',
+                url: MAIN_URL+'/users/login',
                 data: {
                     email,
                     password: pass,
@@ -243,7 +243,7 @@ async function goPost(postId) {
     try {
         const txt = '/posts/id/' + postId;
         putInReq('GET', txt);
-        const result = await axios('http://localhost:8080' + txt);
+        const result = await axios(MAIN_URL + txt);
         putInRes(result.data);
         showOnePost(result.data.post);
     } catch (error) {
