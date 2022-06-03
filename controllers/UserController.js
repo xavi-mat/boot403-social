@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
+const MAIN_URL = process.env.MAIN_URL;
 const transporter = require("../config/nodemailer");
 const confirmEmailHTML = require("../templates/confirmEmailHTML");
 const fs = require("fs");  // Used for the fakeEmail
