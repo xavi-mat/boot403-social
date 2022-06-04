@@ -42,6 +42,7 @@ UserSchema.methods.toJSON = function () {
     user.followersCount = this._doc.followers?.length;
     delete user.tokens;
     delete user.passhash;
+    delete user.confirmed;
     return user;
 }
 

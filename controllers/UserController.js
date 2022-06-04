@@ -144,9 +144,6 @@ const UserController = {
             }
             user.tokens.push(token);
             await user.save();
-            user.passhash = undefined;
-            user.tokens = undefined;
-            user.confirmed = undefined;
             return res.send({ msg: `Welcome ${user.username}`, token, user });
         } catch (error) {
             error.origin = 'user';
@@ -202,9 +199,6 @@ const UserController = {
                 updatedUser,
                 { new: true }
             );
-            user.passhash = undefined;  // Don't send this info
-            user.tokens = undefined;
-            user.confirmed = undefined;
             return res.send({ msg: "Updated", user });
         } catch (error) {
             error.origin = 'user';
