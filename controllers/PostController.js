@@ -1,4 +1,4 @@
-const { Post, User } = require("../models/");
+const { Post, User, Comment } = require("../models/");
 require("dotenv").config();
 const MAIN_URL = process.env.MAIN_URL;
 
@@ -120,14 +120,49 @@ const PostController = {
     },
     async delete(req, res, next) {
         try {
+            // Delete post
             const post = await Post.findOneAndDelete(
                 { _id: req.params._id, author: req.user._id }
             );
-            await User.findByIdAndUpdate(
-                req.user_id,
-                { $pull: { comments: req.params._id } }
-            );
-            return res.send({ msg: "Post deleted", post });
+            if (post) {
+                // Post existed: Cleaning
+                // Delete reference to post from author
+                await User.findByIdAndUpdate(
+                    req.user_id,
+                    { $pull: { comments: post._id } }
+                );
+                // Delete references of likes from users
+                post.likes.forEach(async (userId) => {
+                    await User.findByIdAndUpdate(userId,
+                        { $pull: { likedPosts: post._id } });
+                });
+                // Delete all comments of this post (and clean)
+                post.comments.forEach(async (commentId) => {
+                    // Delete comment
+                    const comment = await Comment.findByIdAndDelete(commentId);
+                    if (comment) {
+                        // Comment existed: Cleaning
+                        // Delete reference to this comment from Post
+                        await Post.findByIdAndUpdate(comment.postId,
+                            { $pull: { comments: commentId } }
+                        );
+                        // Delete reference to this comment from author
+                        await User.findByIdAndUpdate(comment.author,
+                            { $pull: { comments: commentId } }
+                        );
+                        // Delete references to this comments from 'likes'
+                        //  (users who liked this comment)
+                        comment.likes.forEach(async (userId) => {
+                            await User.findByIdAndUpdate(userId,
+                                { $pull: { likedComments: commentId } });
+                        });
+                    }
+                });
+                // // TODO: Delete all comments of the deleted post AND the references to these coments in their authors
+                return res.send({ msg: "Post deleted", post });
+            } else {
+                return res.send({ msg: "Can't delete post" });
+            }
         } catch (error) {
             error.origin = 'post';
             error.suborigin = 'delete';

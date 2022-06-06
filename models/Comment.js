@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Post = require('./Post');
+const User = require('./User');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const CommentSchema = new mongoose.Schema({

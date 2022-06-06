@@ -22,7 +22,7 @@ const CommentController = {
             );
             if (!post) {
                 await Comment.findByIdAndDelete(comment._id);
-                return res.status(400).send({msg:"Post does not exist"});
+                return res.status(400).send({ msg: "Post does not exist" });
             }
             await User.findByIdAndUpdate(
                 req.user._id,
@@ -40,13 +40,26 @@ const CommentController = {
             const comment = await Comment.findOneAndDelete(
                 { _id: req.params._id, author: req.user._id }
             );
-            await Post.findByIdAndUpdate(comment.postId,
-                { $pull: { comments: comment._id } }
-            );
-            await User.findByIdAndUpdate(comment.author,
-                { $pull: { comments: comment._id } }
-            );
-            return res.send({ msg: "Comment deleted", comment });
+            if (comment) {
+                // Comment existed: Cleaning
+                // Delete reference to this comment from Post
+                await Post.findByIdAndUpdate(comment.postId,
+                    { $pull: { comments: comment._id } }
+                );
+                // Delete reference to this comment from author
+                await User.findByIdAndUpdate(comment.author,
+                    { $pull: { comments: comment._id } }
+                );
+                // Delete references to this comments from 'likes'
+                //  (users who liked this comment)
+                comment.likes.forEach(async (userId) => {
+                    await User.findByIdAndUpdate(userId,
+                        { $pull: { likedComments: comment._id } });
+                });
+                return res.send({ msg: "Comment deleted", comment });
+            } else {
+                return res.send({ msg: "Error deleting comment" });
+            }
         } catch (error) {
             error.origin = 'comment';
             error.suborigin = 'delete';

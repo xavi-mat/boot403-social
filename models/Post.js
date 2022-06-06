@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Comment = require('./Comment');
+const User = require('./User');
 
 const PostSchema = new mongoose.Schema({
     title: {
@@ -12,7 +14,7 @@ const PostSchema = new mongoose.Schema({
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: [true,, 'post author\'s userId is required'],
+        required: [true, , 'post author\'s userId is required'],
     },
     image: String,
     comments: [{
@@ -24,6 +26,21 @@ const PostSchema = new mongoose.Schema({
         ref: "User",
     }],
 }, { timestamps: true });
+
+// PostSchema.post('findOneAndDelete', async function (post, next) {
+//     // Clean when deleting a Post
+//     console.log(post);
+//     try {
+//         // Delete reference to post from author
+//         await User.findByIdAndUpdate(post.author,
+//             { $pull: { comments: post._id } }
+//         );
+//     } catch (error) {
+//         console.error(error);
+//     } finally {
+//         next();
+//     }
+// });
 
 const Post = mongoose.model('Post', PostSchema);
 
