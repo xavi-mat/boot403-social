@@ -75,6 +75,7 @@
 
           <section id="newpost-box" class="d-none">
             <form enctype="multipart/form-data">
+              <div id="newpost-alert"></div>
               <div class="mb-3 mt-3">
                 <label for="post-title" class="form-label">Title:</label>
                 <input type="text" class="form-control" id="post-title" placeholder="Post title" name="post-title" required>
@@ -85,10 +86,10 @@
               </div>
               <div class="mb-3">
                 <label for="post-file">Image</label>
-                <input type="file" class="btn btn-primary" name="image" id="newpost-img">
+                <input type="file" class="btn btn-primary" name="image" id="newpost-img" disabled>
               </div>
               <div>
-                <input type="button" class="btn btn-primary" value="Send" id="send-new-post">
+                <input type="submit" class="btn btn-primary" value="Send" id="send-new-post">
                 <input type="reset" class="btn btn-primary" value="Reset">
               </div>
             </form>

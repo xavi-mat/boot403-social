@@ -27,6 +27,8 @@ const profileBox = document.querySelector('#profile-box');
 const loginBox = document.querySelector('#login-box');
 const submitLogin = document.querySelector('#submit-login');
 const loginAlert = document.querySelector('#login-alert');
+const newPostAlert = document.querySelector('#newpost-alert');
+const sendNewPostBtn = document.querySelector('#send-new-post');
 
 ////////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -212,7 +214,7 @@ async function goLogin(ev) {
         if (pass && email) {
             const config = {
                 method: 'post',
-                url: MAIN_URL+'/users/login',
+                url: MAIN_URL + '/users/login',
                 data: {
                     email,
                     password: pass,
@@ -298,11 +300,36 @@ function showOnePost(post) {
 }
 
 function showFormNewPost(ev) {
+    newPostAlert.innerHTML = '';
     hideAllSections();
     pageTitle.innerHTML = 'New Post';
     newPostBox.classList.remove('d-none');
+    if (!jwt) {
+        newPostAlert.innerHTML = '<div class="alert alert-danger">Login required</div>';
+    }
 }
 
+async function goNewPost(ev) {
+    ev.preventDefault();
+    if (!jwt) { return; }
+
+    const newPost = {
+        title: document.querySelector('#post-title'),
+        body: document.querySelector('#post-body'),
+    };
+    if (newPost.title && newPost.body) {
+        const config = {
+            method: 'post',
+            url: MAIN_URL + '/posts',
+            data: newPost,
+            config: { headers: { 'Authorization': jwt } }
+        };
+        putInReq('POST', '/posts', 'JWT', config.data);
+        const resp = await axios(config);
+        putInRes(resp.data);
+    }
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Listeners
@@ -310,6 +337,7 @@ navbtnUser.addEventListener("click", goUserData);
 navBtnPosts.addEventListener("click", showPostsBox);
 navBtnNewPost.addEventListener("click", showFormNewPost);
 submitLogin.addEventListener("click", goLogin);
+sendNewPostBtn.addEventListener("click", goNewPost);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Init
