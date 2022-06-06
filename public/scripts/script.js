@@ -19,6 +19,7 @@ const paginator1 = document.querySelector('#paginator1');
 const paginator2 = document.querySelector('#paginator2');
 const navbtnUser = document.querySelector('#navbtn-user');
 const navBtnPosts = document.querySelector('#navbtn-posts');
+const navBtnNewPost = document.querySelector('#navbtn-newpost');
 const postsBox = document.querySelector('#posts-box');
 const postBox = document.querySelector('#post-box');
 const profileBox = document.querySelector('#profile-box');
@@ -293,10 +294,15 @@ function showOnePost(post) {
     postBox.innerHTML = inn;
 
 }
+
+function showFormNewPost(ev) {
+    console.log("SHOW NEW POST FORM");
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Listeners
 navbtnUser.addEventListener("click", goUserData);
 navBtnPosts.addEventListener("click", showPostsBox);
+navBtnNewPost.addEventListener("click", showFormNewPost);
 submitLogin.addEventListener("click", goLogin);
 
 ////////////////////////////////////////////////////////////////////////////////

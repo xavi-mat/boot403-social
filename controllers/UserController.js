@@ -337,10 +337,6 @@ const UserController = {
                         await Post.findByIdAndUpdate(comment.postId,
                             { $pull: { comments: comment._id } }
                         );
-                        // Delete reference to this comment from author
-                        await User.findByIdAndUpdate(comment.author,
-                            { $pull: { comments: comment._id } }
-                        );
                         // Delete references to this comments from 'likes'
                         //  (users who liked this comment)
                         comment.likes.forEach(async (userId) => {
@@ -357,11 +353,6 @@ const UserController = {
                     );
                     if (post) {
                         // Post existed: Cleaning
-                        // Delete reference to post from author
-                        await User.findByIdAndUpdate(
-                            req.user_id,
-                            { $pull: { comments: post._id } }
-                        );
                         // Delete references of likes from users
                         post.likes.forEach(async (userId) => {
                             await User.findByIdAndUpdate(userId,
