@@ -35,33 +35,33 @@ https://github.com/xavi-mat/boot403-social
 ### Usage
 There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 
-|method|endpoint|role|use|done|
-|------|--------|----|---|----|
-|POST|`/users`|anyone|Register a new user|[x]|
-|POST|`/users/login`|anyone|Login with credentials|[x]|
-|GET|`/users`|user|Get own user's data|[x]|
-|GET|`/users/confirm/:emailToken`|anyone|Confirm email|[x]|
-|GET|`/users/search`|anyone|Search by username|[x]|
-|GET|`/users/id/:_id`|user|Get user data by Id|[x]|
-|PUT|`/users`|user|Update own information|[x]|
-|PUT|`/users/follow/:_id`|user|Follow user by Id|[x]|
-|DELETE|`/users/logout`|user|Logout|[x]|
-|DELETE|`/users/follow/:_id`|user|Stop following user by Id|[x]|
-|POST|`/posts`|user|Create a post|[x]|
-|GET|`/posts/id/:_id`|anyone|Get a post by Id|[x]|
-|GET|`/posts/search`|anyone|Search a post by title|[x]|
-|GET|`/posts`|anyone|Get all posts|[x]|
-|PUT|`/posts/like/id/:_id`|user|Like a post by Id|[x]|
-|PUT|`/posts/id/:_id`|author|Update own posts by Id|[x]|
-|DELETE|`/posts/id/:_id`|author|Delete own post by Id|[x]|
-|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|[x]|
-|POST|`/comments`|user|Create a comment to a post|[x]|
-|GET|`/comments/id/:_id`|anyone|Get a comment by Id|[x]|
-|PUT|`/comments/id/:_id`|author|Update own comment by Id|[x]|
-|PUT|`/comments/like/:_id`|user|Like a comment by Id|[x]|
-|DELETE|`/comments/id/:_id`|author|Delete own comment by Id|[x]|
-|DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|[x]|
-|DELETE|`/users/clean-all`|admin|Empty database and seed it randomly|[x]|
+|method|endpoint|role|use|
+|------|--------|----|---|
+|POST|`/users`|anyone|Register a new user|
+|POST|`/users/login`|anyone|Login with credentials|
+|GET|`/users`|user|Get own user's data|
+|GET|`/users/confirm/:emailToken`|anyone|Confirm email|
+|GET|`/users/search`|anyone|Search by username|
+|GET|`/users/id/:_id`|user|Get user data by Id|
+|PUT|`/users`|user|Update own information|
+|PUT|`/users/follow/:_id`|user|Follow user by Id|
+|DELETE|`/users/logout`|user|Logout|
+|DELETE|`/users/follow/:_id`|user|Stop following user by Id|
+|POST|`/posts`|user|Create a post|
+|GET|`/posts/id/:_id`|anyone|Get a post by Id|
+|GET|`/posts/search`|anyone|Search a post by title|
+|GET|`/posts`|anyone|Get all posts|
+|PUT|`/posts/like/id/:_id`|user|Like a post by Id|
+|PUT|`/posts/id/:_id`|author|Update own posts by Id|
+|DELETE|`/posts/id/:_id`|author|Delete own post by Id|
+|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|
+|POST|`/comments`|user|Create a comment to a post|
+|GET|`/comments/id/:_id`|anyone|Get a comment by Id|
+|PUT|`/comments/id/:_id`|author|Update own comment by Id|
+|PUT|`/comments/like/:_id`|user|Like a comment by Id|
+|DELETE|`/comments/id/:_id`|author|Delete own comment by Id|
+|DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|
+|DELETE|`/users/clean-all`|admin|Empty database and seed it randomly|
 
 See detailed examples of requests and responses in:
 https://documenter.getpostman.com/view/11287519/Uz5FLcd7

@@ -22,6 +22,7 @@ const navBtnPosts = document.querySelector('#navbtn-posts');
 const navBtnNewPost = document.querySelector('#navbtn-newpost');
 const postsBox = document.querySelector('#posts-box');
 const postBox = document.querySelector('#post-box');
+const newPostBox = document.querySelector('#newpost-box')
 const profileBox = document.querySelector('#profile-box');
 const loginBox = document.querySelector('#login-box');
 const submitLogin = document.querySelector('#submit-login');
@@ -44,8 +45,17 @@ ${url}
 ${auth ?? ''}
 ${body ? JSON.stringify(body, null, 2) : ''}`;
 }
+
 function putInRes(data) {
     resBox.innerHTML = JSON.stringify(data, null, 2);
+}
+
+function hideAllSections() {
+    postBox.classList.add('d-none');
+    profileBox.classList.add('d-none');
+    loginBox.classList.add('d-none');
+    postsBox.classList.add('d-none');
+    newPostBox.classList.add('d-none');
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,9 +78,7 @@ async function getPosts(page = 1) {
 }
 
 async function showPosts(page = 1) {
-    postBox.classList.add('d-none');
-    profileBox.classList.add('d-none');
-    loginBox.classList.add('d-none');
+    hideAllSections();
     postsBox.classList.remove('d-none');
     const postsData = await getPosts(page);
     let inn = '';
@@ -145,9 +153,7 @@ async function goUser(userId) {
 }
 
 function showUserData(who) {
-    postsBox.classList.add('d-none');
-    postBox.classList.add('d-none');
-    loginBox.classList.add('d-none');
+    hideAllSections();
     profileBox.classList.remove('d-none');
     if (who) {
         pageTitle.innerHTML = 'Profile';
@@ -192,7 +198,7 @@ function showUserData(who) {
         profileBox.innerHTML = inn;
     } else {
         pageTitle.innerHTML = 'Login';
-        profileBox.classList.add('d-none');
+        hideAllSections();
         loginBox.classList.remove('d-none');
     }
 }
@@ -234,9 +240,7 @@ async function goLogin(ev) {
 
 function showPostsBox() {
     pageTitle.innerHTML = 'Posts';
-    postBox.classList.add('d-none');
-    loginBox.classList.add('d-none');
-    profileBox.classList.add('d-none');
+    hideAllSections();
     postsBox.classList.remove('d-none');
 }
 
@@ -253,9 +257,7 @@ async function goPost(postId) {
 }
 
 function showOnePost(post) {
-    postsBox.classList.add('d-none');
-    profileBox.classList.add('d-none');
-    loginBox.classList.add('d-none');
+    hideAllSections();
     postBox.classList.remove('d-none');
 
     pageTitle.innerHTML = 'Post';
@@ -296,8 +298,12 @@ function showOnePost(post) {
 }
 
 function showFormNewPost(ev) {
-    console.log("SHOW NEW POST FORM");
+    hideAllSections();
+    pageTitle.innerHTML = 'New Post';
+    newPostBox.classList.remove('d-none');
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Listeners
 navbtnUser.addEventListener("click", goUserData);
