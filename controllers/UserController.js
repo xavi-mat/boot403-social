@@ -18,7 +18,7 @@ const UserController = {
             }
             req.body.role = "user"; // Assing role by default
             req.body.passhash = bcrypt.hashSync(req.body.password, 10);
-            req.body.avatar = MAIN_URL+'/avatars/avatar.png';
+            req.body.avatar = MAIN_URL + '/avatars/avatar.png';
             req.body.confirmed = false;
             req.body.active = true;
             const user = await User.create(req.body);
@@ -27,7 +27,7 @@ const UserController = {
                 JWT_SECRET,
                 { expiresIn: "48h", }
             );
-            const url = MAIN_URL+"/users/confirm/" + emailToken;
+            const url = MAIN_URL + "/users/confirm/" + emailToken;
             const confirmEmailContent = confirmEmailHTML(
                 req.body.username,
                 req.body.email,
@@ -294,6 +294,113 @@ const UserController = {
         } catch (error) {
             error.origin = 'user';
             error.suborigin = 'getById';
+            next(error);
+        }
+    },
+    async delete(req, res, next) {
+        try {
+            const user = await User.findById(req.user._id);
+            if (user) {
+                // User existed: Cleaning
+                // Delete references to user from followers
+                user.followers.forEach(async (userId) => {
+                    await User.findByIdAndUpdate(userId,
+                        { $pull: { following: req.user._id } }
+                    );
+                });
+                // Delete references to user from following
+                user.following.forEach(async (userId) => {
+                    await User.findByIdAndUpdate(userId,
+                        { $pull: { followers: req.user._id } }
+                    );
+                });
+                // Delete references to user in likedPosts
+                user.likedPosts.forEach(async (postId) => {
+                    await Post.findByIdAndUpdate(postId,
+                        { $pull: { likes: req.user._id } }
+                    );
+                });
+                // Delete references to user in likedComments
+                user.likedComments.forEach(async (commentId) => {
+                    await Comment.findByIdAndUpdate(commentId,
+                        { $pull: { likes: req.user._id } }
+                    );
+                });
+                // Delete user's Comments (and clean)
+                user.comments.forEach(async (commentId) => {
+                    const comment = await Comment.findOneAndDelete(
+                        { _id: commentId, author: req.user._id }
+                    );
+                    if (comment) {
+                        // Comment existed: Cleaning
+                        // Delete reference to this comment from Post
+                        await Post.findByIdAndUpdate(comment.postId,
+                            { $pull: { comments: comment._id } }
+                        );
+                        // Delete reference to this comment from author
+                        await User.findByIdAndUpdate(comment.author,
+                            { $pull: { comments: comment._id } }
+                        );
+                        // Delete references to this comments from 'likes'
+                        //  (users who liked this comment)
+                        comment.likes.forEach(async (userId) => {
+                            await User.findByIdAndUpdate(userId,
+                                { $pull: { likedComments: comment._id } });
+                        });
+                    }
+                });
+                // Delete user's Post (and clean)
+                user.posts.forEach(async (postId) => {
+                    // Delete post
+                    const post = await Post.findOneAndDelete(
+                        { _id: req.params._id, author: req.user._id }
+                    );
+                    if (post) {
+                        // Post existed: Cleaning
+                        // Delete reference to post from author
+                        await User.findByIdAndUpdate(
+                            req.user_id,
+                            { $pull: { comments: post._id } }
+                        );
+                        // Delete references of likes from users
+                        post.likes.forEach(async (userId) => {
+                            await User.findByIdAndUpdate(userId,
+                                { $pull: { likedPosts: post._id } });
+                        });
+                        // Delete all comments of this post (and clean)
+                        post.comments.forEach(async (commentId) => {
+                            // Delete comment
+                            const comment = await Comment.findByIdAndDelete(commentId);
+                            if (comment) {
+                                // Comment existed: Cleaning
+                                // Delete reference to this comment from Post
+                                await Post.findByIdAndUpdate(comment.postId,
+                                    { $pull: { comments: commentId } }
+                                );
+                                // Delete reference to this comment from author
+                                await User.findByIdAndUpdate(comment.author,
+                                    { $pull: { comments: commentId } }
+                                );
+                                // Delete references to this comments from 'likes'
+                                //  (users who liked this comment)
+                                comment.likes.forEach(async (userId) => {
+                                    await User.findByIdAndUpdate(userId,
+                                        { $pull: { likedComments: commentId } });
+                                });
+                            }
+                        });
+                    }
+                });
+                // Finally, delete the user
+                await User.deleteOne({ _id: req.user._id });
+                return res.send({ msg: "User deleted" });
+            } else {
+                return res.status(500).send({ msg: "Error deleting user" });
+            }
+
+        } catch (error) {
+            error.origin = 'user';
+            error.suborigin = 'delete';
             next(error);
         }
     }

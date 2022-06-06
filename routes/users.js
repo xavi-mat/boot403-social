@@ -13,6 +13,7 @@ router.get('/search', UserController.searchByUsername);
 router.get('/id/:_id', UserController.getById);
 router.put('/', authentication, uploadAvatar.single('avatar'), UserController.update);
 router.put('/follow/:_id', authentication, UserController.follow);
+router.delete('/delete', authentication, UserController.delete);
 router.delete('/logout', authentication, UserController.logout);
 router.delete('/follow/:_id', authentication, UserController.unfollow);
 
