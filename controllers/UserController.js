@@ -62,7 +62,7 @@ const UserController = {
                 { email: payload.email },
                 { confirmed: true }
             );
-            return res.redirect('/');
+            return res.send('<a href="' + MAIN_URL + '">Go to the main page</a>');
         } catch (error) {
             error.origin = 'user';
             error.suborigin = 'confirmEmail';
@@ -129,11 +129,11 @@ const UserController = {
                 .populate({ path: "following", select: { username: 1 } })
                 .populate({ path: "followers", select: { username: 1 } })
             if (!user) {
-                return res.status(404).send({ msg: "Wrong credentials" });
+                return res.status(400).send({ msg: "Wrong credentials" });
             }
             const passwordMatch = await bcrypt.compare(req.body.password, user.passhash);
             if (!passwordMatch) {
-                return res.status(404).send({ msg: "Wrong credentials" });
+                return res.status(400).send({ msg: "Wrong credentials" });
             }
             if (!user.confirmed) {
                 return res.send({ msg: "Please, confirm your email" });
@@ -185,15 +185,17 @@ const UserController = {
     },
     async update(req, res, next) {
         try {
-            // Can only update some fields
-            const avatar = req.file ?
+            // Can only update some fields: avatar, password and username
+            const updatedUser = {};
+            updatedUser.avatar = req.file ?
                 `${MAIN_URL}/avatars/${req.file.filename}` :
                 undefined;
-
-            const updatedUser = {
-                username: req.body.username,
-                avatar,
-            };
+            updatedUser.passhash = req.body.password ?
+                bcrypt.hashSync(req.body.password, 10) :
+                undefined;
+            updatedUser.username = req.body.username ?
+                req.body.username :
+                undefined;
             const user = await User.findByIdAndUpdate(
                 req.user._id,
                 updatedUser,

@@ -37,14 +37,15 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 
 |method|endpoint|role|use|
 |------|--------|----|---|
-|POST|`/users`|anyone|Register a new user|
-|POST|`/users/login`|anyone|Login with credentials|
-|GET|`/users`|user|Get own user's data|
-|GET|`/users/confirm/:emailToken`|anyone|Confirm email|
-|GET|`/users/search`|anyone|Search by username|
-|GET|`/users/id/:_id`|user|Get user data by Id|
+|POST|`/users`|anyone|Register a new user ✔️|
+|POST|`/users/login`|anyone|Login with credentials ✔️|
+|GET|`/users`|user|Get own user's data ✔️|
+|GET|`/users/confirm/:emailToken`|anyone|Confirm email ✔️|
+|GET|`/users/search`|anyone|Search by username ✔️|
+|GET|`/users/id/:_id`|user|Get user data by Id ✔️|
 |PUT|`/users`|user|Update own information|
 |PUT|`/users/follow/:_id`|user|Follow user by Id|
+|DELETE|`/users/`|user|Delete all User's data|
 |DELETE|`/users/logout`|user|Logout|
 |DELETE|`/users/follow/:_id`|user|Stop following user by Id|
 |POST|`/posts`|user|Create a post|
