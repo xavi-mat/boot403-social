@@ -50,13 +50,13 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 |DELETE|`/users/logout`|user|Logout ✔️|
 |DELETE|`/users/follow/:_id`|user|Stop following user by Id ✔️|
 | |POSTS| | |
-|POST|`/posts`|user|Create a post|
-|GET|`/posts/id/:_id`|anyone|Get a post by Id|
+|POST|`/posts`|user|Create a post ✔️|
+|GET|`/posts/id/:_id`|anyone|Get a post by Id ✔️|
 |GET|`/posts/search`|anyone|Search a post by title|
-|GET|`/posts`|anyone|Get all posts|
+|GET|`/posts`|anyone|Get all posts ✔️|
 |PUT|`/posts/like/id/:_id`|user|Like a post by Id|
-|PUT|`/posts/id/:_id`|author|Update own posts by Id|
-|DELETE|`/posts/id/:_id`|author|Delete own post by Id|
+|PUT|`/posts/id/:_id`|author|Update own posts by Id ✔️|
+|DELETE|`/posts/id/:_id`|author|Delete own post by Id ✔️|
 |DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|
 | |COMMENTS| | |
 |POST|`/comments`|user|Create a comment to a post|

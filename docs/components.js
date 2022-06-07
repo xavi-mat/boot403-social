@@ -57,6 +57,29 @@ module.exports = {
         description: "User Identifier Code. Created by MongoDB",
         example: "629e138db6e9749879d0deaa"
       },
+      createPost: {
+        type: "object",
+        properties: {
+          title: {
+            type:"string",
+            description: "Title of post",
+            required: true,
+            example: "Title of post"
+          },
+          body: {
+            type:"string",
+            description: "Body of post",
+            required: true,
+            example: "Body of post. Lorem ipsum..."
+          },
+          image: {
+            type: "string",
+            description: "Post image",
+            required: false,
+            format: "binary",
+          },
+        }
+      }
       // user: {
       //   type: 'object',
       //   properties: {
