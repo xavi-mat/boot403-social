@@ -48,7 +48,7 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 |PUT|`/users/follow/:_id`|user|Follow user by Id ✔️|
 |DELETE|`/users/`|user|Delete all User's data ✔️|
 |DELETE|`/users/logout`|user|Logout ✔️|
-|DELETE|`/users/follow/:_id`|user|Stop following user by Id|
+|DELETE|`/users/follow/:_id`|user|Stop following user by Id ✔️|
 | |POSTS| | |
 |POST|`/posts`|user|Create a post|
 |GET|`/posts/id/:_id`|anyone|Get a post by Id|
