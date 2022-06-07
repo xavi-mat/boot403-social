@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         trim: true,
+      
         required: [true, 'username required'],
         minLength: [3, 'username must be 3 characters minimum'],
         maxLength: [40, 'username must be 40 characters maximum'],
@@ -39,7 +40,7 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.methods.toJSON = function () {
     const user = this._doc;
-    user.followersCount = this._doc.followers?.length;
+    user.followersCount = this._doc.followers?.length;  // Optional chaining operatior
     delete user.tokens;
     delete user.passhash;
     delete user.confirmed;
