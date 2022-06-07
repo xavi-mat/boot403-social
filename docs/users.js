@@ -2,9 +2,7 @@ module.exports = {
   paths: {
     "/users": {
       post: {
-        tags: {
-          Users: "Register"
-        },
+        tags: { Users: "Register" },
         description: "Register a new user with username, email and password",
         operationId: "registerUser",
         parameters: [],
@@ -22,12 +20,8 @@ module.exports = {
         }
       },
       get: {
-        security: [{
-          ApiKeyAuth: []
-        }],
-        tags: {
-          Users: "Get info"
-        },
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Get info" },
         description: "Get all data of logged-in user",
         operationId: "getUserInfo",
         parameters: [],
@@ -37,12 +31,8 @@ module.exports = {
         }
       },
       put: {
-        security: [{
-          ApiKeyAuth: []
-        }],
-        tags: {
-          Users: "Update info"
-        },
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Update info" },
         description: "Update authenticated user's data: **username**, **password** and/or **avatar**",
         operationId: "updateUserInfo",
         parameters: [],
@@ -82,9 +72,7 @@ module.exports = {
     },
     "/users/login": {
       post: {
-        tags: {
-          Users: "Login"
-        },
+        tags: { Users: "Login" },
         description: "Login a user with credentials (email, password) and get a jwt.",
         operationId: "loginUser",
         parameters: [],
@@ -104,9 +92,7 @@ module.exports = {
     },
     "/users/confirm/{emailToken}": {
       get: {
-        tags: {
-          User: "Confirm Email"
-        },
+        tags: { User: "Confirm Email" },
         description: "Confirm an email address by providing the token sent to the user.",
         operationId: "confirmEmail",
         parameters: [
@@ -129,9 +115,7 @@ module.exports = {
     },
     "/users/search": {
       get: {
-        tags: {
-          Users: "Search by username"
-        },
+        tags: { Users: "Search by username" },
         description: "Search for users by username, case insensitive",
         operationId: "searchUsers",
         parameters: [
@@ -172,9 +156,7 @@ module.exports = {
     },
     "/users/id/{_id}": {
       get: {
-        tags: {
-          Users: "Get by id"
-        },
+        tags: { Users: "Get by id" },
         description: "Get public user's info by id: **minimal personal data:** _id, username, avatar; **Title** of posts, **ids** of comments, likes, followers, and following.",
         operationId: "getUserById",
         parameters: [
@@ -197,12 +179,8 @@ module.exports = {
     },
     "/users/follow/{_id}": {
       put: {
-        security: [{
-          ApiKeyAuth: []
-        }],
-        tags: {
-          Users: "Follow"
-        },
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Follow" },
         description: "Follow a user by id",
         operationId: "followUser",
         parameters: [
@@ -223,12 +201,8 @@ module.exports = {
         },
       },
       delete: {
-        security: [{
-          ApiKeyAuth: []
-        }],
-        tags: {
-          Users: "Unfollow"
-        },
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Unfollow" },
         description: "Stop following a user",
         operationId: "unfollowUser",
         parameters: [
@@ -250,12 +224,8 @@ module.exports = {
     },
     "/users/delete": {
       delete: {
-        security: [{
-          ApiKeyAuth: []
-        }],
-        tags: {
-          Users: "Delete"
-        },
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Delete" },
         description: "Delete all data of the authenticated user: personal data, posts, comments, likes and following/followers references.",
         operationId: "deleteUser",
         parameters: [],
@@ -267,7 +237,18 @@ module.exports = {
       }
     },
     "/users/logout": {
-      delete: {}
+      delete: {
+        security: [{ ApiKeyAuth: [] }],
+        tags: { Users: "Logout" },
+        description: "User's logout",
+        operationId: "logoutUser",
+        parameters: [],
+        responses: {
+          200: { description: "Logged out" },
+          400: { description: "Bad request" },
+          500: { description: "Internal server error" }
+        }
+      }
     },
     "/users/clean-all": {
       delete: {}
