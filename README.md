@@ -43,8 +43,8 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 |GET|`/users/confirm/:emailToken`|anyone|Confirm email ✔️|
 |GET|`/users/search`|anyone|Search by username ✔️|
 |GET|`/users/id/:_id`|user|Get user data by Id ✔️|
-|PUT|`/users`|user|Update own information|
-|PUT|`/users/follow/:_id`|user|Follow user by Id|
+|PUT|`/users`|user|Update own information ✔️|
+|PUT|`/users/follow/:_id`|user|Follow user by Id ✔️|
 |DELETE|`/users/`|user|Delete all User's data|
 |DELETE|`/users/logout`|user|Logout|
 |DELETE|`/users/follow/:_id`|user|Stop following user by Id|

@@ -52,11 +52,11 @@ module.exports = {
           }
         }
       },
-      // UserId: {
-      //   type: 'ObjectId',
-      //   description: "User Identifier Code. Created by MongoDB",
-      //   example: "629e138db6e9749879d0deaa"
-      // },
+      UserId: {
+        type: 'string',
+        description: "User Identifier Code. Created by MongoDB",
+        example: "629e138db6e9749879d0deaa"
+      },
       // user: {
       //   type: 'object',
       //   properties: {

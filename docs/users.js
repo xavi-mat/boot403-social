@@ -48,7 +48,7 @@ module.exports = {
         parameters: [],
         requestBody: {
           content: {
-           "multipart/form-data": {
+            "multipart/form-data": {
               schema: {
                 type: "object",
                 properties: {
@@ -196,11 +196,75 @@ module.exports = {
       }
     },
     "/users/follow/{_id}": {
-      put: {},
-      delete: {}
+      put: {
+        security: [{
+          ApiKeyAuth: []
+        }],
+        tags: {
+          Users: "Follow"
+        },
+        description: "Follow a user by id",
+        operationId: "followUser",
+        parameters: [
+          {
+            name: "_id",
+            in: "path",
+            description: "User's id",
+            required: true,
+            schema: {
+              $ref: "#components/schemas/UserId",
+            }
+          }
+        ],
+        responses: {
+          200: { description: "User was followed" },
+          400: { description: "Error: followUser-user" },
+          500: { description: "Internal server error" },
+        },
+      },
+      delete: {
+        security: [{
+          ApiKeyAuth: []
+        }],
+        tags: {
+          Users: "Unfollow"
+        },
+        description: "Stop following a user",
+        operationId: "unfollowUser",
+        parameters: [
+          {
+            name: "_id",
+            in: "path",
+            description: "User's id",
+            schema: {
+              $ref: "#components/schemas/UserId",
+            }
+          }
+        ],
+        responses: {
+          200: { description: "Unfollowing user" },
+          400: { description: "Error unfollowing used" },
+          500: { description: "Internal server error" }
+        }
+      }
     },
     "/users/delete": {
-      delete: {}
+      delete: {
+        security: [{
+          ApiKeyAuth: []
+        }],
+        tags: {
+          Users: "Delete"
+        },
+        description: "Delete all data of the authenticated user: personal data, posts, comments, likes and following/followers references.",
+        operationId: "deleteUser",
+        parameters: [],
+        responses: {
+          200: { description: "User deleted" },
+          400: { description: "Bad request" },
+          500: { description: "Internal server error" }
+        }
+      }
     },
     "/users/logout": {
       delete: {}
