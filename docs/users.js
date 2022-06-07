@@ -119,7 +119,7 @@ module.exports = {
   },
   "/users/search": {
     get: {
-      tags: ["User's public actions"],
+      tags: ["User's actions"],
       summary: "Search by username",
       description: "Search for users by username, case insensitive",
       operationId: "searchUsers",
@@ -186,7 +186,7 @@ module.exports = {
   "/users/follow/{_id}": {
     put: {
       security: [{ ApiKeyAuth: [] }],
-      tags: ["User's public actions"],
+      tags: ["User's actions"],
       summary: "Follow a user",
       description: "Follow a user by id",
       operationId: "followUser",
@@ -209,7 +209,7 @@ module.exports = {
     },
     delete: {
       security: [{ ApiKeyAuth: [] }],
-      tags: ["User's public actions"],
+      tags: ["User's actions"],
       summary: "Unfollow a user",
       description: "Stop following a user",
       operationId: "unfollowUser",

@@ -52,18 +52,18 @@ There are three main blocks of endpoints: `/users`, `/posts`, and `/comments`.
 | |POSTS| | |
 |POST|`/posts`|user|Create a post ✔️|
 |GET|`/posts/id/:_id`|anyone|Get a post by Id ✔️|
-|GET|`/posts/search`|anyone|Search a post by title|
+|GET|`/posts/search`|anyone|Search a post by title ✔️|
 |GET|`/posts`|anyone|Get all posts ✔️|
-|PUT|`/posts/like/id/:_id`|user|Like a post by Id|
+|PUT|`/posts/like/id/:_id`|user|Like a post by Id ✔️|
 |PUT|`/posts/id/:_id`|author|Update own posts by Id ✔️|
 |DELETE|`/posts/id/:_id`|author|Delete own post by Id ✔️|
-|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id|
+|DELETE|`/posts/like/id/:_id`|user|Stop liking a post by Id ✔️|
 | |COMMENTS| | |
-|POST|`/comments`|user|Create a comment to a post|
-|GET|`/comments/id/:_id`|anyone|Get a comment by Id|
-|PUT|`/comments/id/:_id`|author|Update own comment by Id|
+|POST|`/comments`|user|Create a comment to a post ✔️|
+|GET|`/comments/id/:_id`|anyone|Get a comment by Id ✔️|
+|PUT|`/comments/id/:_id`|author|Update own comment by Id ✔️|
 |PUT|`/comments/like/:_id`|user|Like a comment by Id|
-|DELETE|`/comments/id/:_id`|author|Delete own comment by Id|
+|DELETE|`/comments/id/:_id`|author|Delete own comment by Id ✔️|
 |DELETE|`/comments/like/:_id`|user|Stop liking a comment by Id|
 | |SEEDERS| | |
 |DELETE|`/users/clean-all`|admin|Empty database and seed it randomly|

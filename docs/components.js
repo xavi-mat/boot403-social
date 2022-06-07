@@ -61,13 +61,13 @@ module.exports = {
         type: "object",
         properties: {
           title: {
-            type:"string",
+            type: "string",
             description: "Title of post",
             required: true,
             example: "Title of post"
           },
           body: {
-            type:"string",
+            type: "string",
             description: "Body of post",
             required: true,
             example: "Body of post. Lorem ipsum..."
@@ -79,23 +79,30 @@ module.exports = {
             format: "binary",
           },
         }
+      },
+      createComment: {
+        type: "object",
+        properties: {
+          postId: {
+            type: "string",
+            description: "Id of commented post",
+            required: true,
+            example: "629e138fb6e9749879d0dec1"
+          },
+          text: {
+            type: "string",
+            description: "Text of comment",
+            required: true,
+            example: "Text of comment. Lorem ipsum..."
+          },
+          image: {
+            type: "string",
+            description: "Comment image",
+            required: false,
+            format: "binary",
+          },
+        }
       }
-      // user: {
-      //   type: 'object',
-      //   properties: {
-      //     _id: {
-      //       type: "ObjectId",
-      //       description: "User Identifier Code. Created by MongoDB",
-      //       example: "629e138db6e9749879d0deaa"
-      //     },
-      //     username: {
-      //       type: "string",
-      //       description: "Name/alias of user. Changeable. Not used for identificacion.",
-      //       example: "janedoe",
-      //     },
-      //     TODO: {}
-      //   }
-      // },
     }
   }
 };
