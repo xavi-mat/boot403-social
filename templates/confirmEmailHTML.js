@@ -51,9 +51,9 @@ ${MSG009}</td></tr><tr><tr><td>
 <a href="${MSG010}" target="_blank" style="color: #ffffff;">
 <font color="#ffffff">${MSG011}</font></a></b></td></tr></table></td></tr>
 <tr><td style="padding: 30px 0 10px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-${MSG012}:<br>
+<!-- ${MSG012}:<br>
 <a href="${MSG010}" target="_blank">${MSG010}</a>
-<br><br>${MSG013}
+<br --><br>${MSG013}
 </td></tr></table></tr><tr><td bgcolor="#ee4c50" style="padding: 30px 30px 30px 30px;">
 <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
 <td width="75%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">
