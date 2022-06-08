@@ -133,6 +133,7 @@ async function showPosts(page = 1) {
     inn += '</ul>';
     paginator1.innerHTML = inn;
     paginator2.innerHTML = inn;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goUserData(ev) {
@@ -186,14 +187,14 @@ function showUserData(who) {
         inn += '<h4>Following</h4>';
         inn += '<ul>';
         who.following.forEach((u) => {
-            inn += `<li><span class="btn" onclick="goUser('${p._id}')">${u.username}</span></li>`;
+            inn += `<li><span class="btn" onclick="goUser('${u._id}')">${u.username}</span></li>`;
         });
         inn += '</ul>';
 
         inn += '<h4>Followers</h4>';
         inn += '<ul>';
         who.followers.forEach((u) => {
-            inn += `<li><span class="btn" onclick="goUser('${p._id}')">${u.username}</span></li>`;
+            inn += `<li><span class="btn" onclick="goUser('${u._id}')">${u.username}</span></li>`;
         });
         inn += '</ul>';
 
@@ -203,6 +204,7 @@ function showUserData(who) {
         hideAllSections();
         loginBox.classList.remove('d-none');
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function goLogin(ev) {
@@ -238,12 +240,14 @@ async function goLogin(ev) {
         navbtnUser.innerHTML = 'Login';
         loginAlert.innerHTML = '<div class="alert alert-danger">Invalid credentials</div>';
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showPostsBox() {
     pageTitle.innerHTML = 'Posts';
     hideAllSections();
     postsBox.classList.remove('d-none');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function goPost(postId) {
@@ -296,7 +300,7 @@ function showOnePost(post) {
     });
 
     postBox.innerHTML = inn;
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showFormNewPost(ev) {
@@ -328,7 +332,7 @@ async function goNewPost(ev) {
         const resp = await axios(config);
         putInRes(resp.data);
     }
-
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
